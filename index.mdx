@@ -1,97 +1,40 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Browser Cash"
+description: "Docs for the Dashboard, Lisa (Workers), Tron (Agents), and Billing"
 ---
 
-## Setting up
+## What is Browser Cash?
 
-Get your documentation site up and running in minutes.
+Browser Cash is a hosted browser + agent platform with four parts:
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
+- Dashboard (Next.js on Cloudflare) — user UI + server API proxies
+- Lisa (Cloudflare Worker) — session orchestration, agent trigger, billing gate
+- Tron (Agents) — task runner that executes the agent against a CDP URL
+- Billing Worker — wallet balance, usage metering, and checkout
+
+<Card title="Quickstart" icon="rocket" href="/quickstart" horizontal>
+  Configure env, deploy Workers, run Tron or point to our hosted Tron, and use the Dashboard.
 </Card>
 
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
 <Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+  <Card title="Local Development" icon="rectangle-terminal" href="/development">
+    Run Dashboard + Lisa locally; run Tron via Docker or use hosted.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="API Endpoints" icon="terminal" href="/api-reference/introduction">
+    Call Lisa and Tron directly or via the Dashboard server proxies.
   </Card>
 </Columns>
 
-## Create beautiful pages
+### High-level flow
 
-Everything you need to create world-class documentation.
+1) Dashboard POST `/api/agents/trigger` → Lisa `POST /v1/consumer/agents/trigger`
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+2) Lisa provisions a browser session, resolves a CDP URL, then calls Tron `POST ${TRON_API_BASE}/v1/task/create` with Bearer.
 
-## Need inspiration?
+3) Dashboard GET `/api/agents/runs/:id` → Lisa `GET /v1/consumer/agents/runs/:id` → Tron `GET ${TRON_API_BASE}/v1/task/:id`.
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+4) Stop uses Lisa `DELETE /v1/consumer/session?sessionId=...`.
+
+<Note>
+  For production, set `TRON_API_BASE=https://tron.tera.space` and use `Authorization: Bearer 123456` when Lisa calls Tron.
+</Note>

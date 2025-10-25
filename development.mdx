@@ -1,94 +1,65 @@
 ---
 title: 'Development'
-description: 'Preview changes locally to update your docs'
+description: 'Run Dashboard + Lisa locally; run Tron locally or use hosted'
 ---
 
-<Info>
-  **Prerequisites**:
-  - Node.js version 19 or higher
-  - A docs repository with a `docs.json` file
-</Info>
-
-Follow these steps to install and run Mintlify on your operating system.
-
-<Steps>
-<Step title="Install the Mintlify CLI">
+## Dashboard (Next on Cloudflare)
 
 ```bash
-npm i -g mint
+cd cdp-as-a-service-dashboard
+npm install
+npm run dev
+# Open http://localhost:3000
 ```
-</Step>
 
-<Step title="Preview locally">
+Environment used by the Dashboard server routes:
 
-Navigate to your docs directory where your `docs.json` file is located, and run the following command:
+- <code>LISA_BASE</code> — base URL to Lisa (e.g., <code>https://lisa-taurine.tera.space</code>)
+- <code>LISA_JWT_SECRET</code> — must match Lisa’s <code>CONSUMER_JWT_SECRET</code>
+
+## Lisa (Cloudflare Worker)
 
 ```bash
-mint dev
+cd Taurine/lisa
+wrangler dev
+# Or deploy: wrangler deploy
 ```
 
-A local preview of your documentation will be available at `http://localhost:3000`.
+Required env bindings:
 
-</Step>
-</Steps>
+- <code>PROD_DB</code> (D1)
+- <code>TRON_API_BASE</code>, <code>TRON_API_KEY</code>
+- <code>BILLING_URL</code>, <code>BILLING_SERVICE_SECRET</code>
+- <code>CONSUMER_JWT_SECRET</code>, <code>FUJI_API_KEY</code>
 
-## Custom ports
+## Tron (Agents)
 
-By default, Mintlify uses port 3000. You can customize the port Mintlify runs on by using the `--port` flag. For example, to run Mintlify on port 3333, use this command:
+Use hosted or run locally:
 
 ```bash
-mint dev --port 3333
+cd Roadrunner-Tron
+npm install
+docker compose up -d redis
+npm run docker:build:linux
+docker compose up -d api worker
+# API on http://localhost:3000
 ```
 
-If you attempt to run Mintlify on a port that's already in use, it will use the next available port:
+Lisa expects Tron endpoints:
 
-```md
-Port 3000 is already in use. Trying 3001 instead.
-```
+- <code>POST /v1/task/create</code>
+- <code>GET /v1/task/:id</code>
 
-## Mintlify versions
-
-Please note that each CLI release is associated with a specific version of Mintlify. If your local preview does not align with the production version, please update the CLI:
+## Billing Worker
 
 ```bash
-npm mint update
+cd billing-worker
+wrangler dev
+# Or wrangler deploy
 ```
 
-## Validating links
+Set <code>SERVICE_SECRET_LISA</code>/<code>SERVICE_SECRET_DASHBOARD</code> and optional rate vars.
 
-The CLI can assist with validating links in your documentation. To identify any broken links, use the following command:
-
-```bash
-mint broken-links
-```
-
-## Deployment
-
-If the deployment is successful, you should see the following:
-
-<Frame>
-  <img src="/images/checks-passed.png" alt="Screenshot of a deployment confirmation message that says All checks have passed." style={{ borderRadius: '0.5rem' }} />
-</Frame>
-
-## Code formatting
-
-We suggest using extensions on your IDE to recognize and format MDX. If you're a VSCode user, consider the [MDX VSCode extension](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-mdx) for syntax highlighting, and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) for code formatting.
-
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title='Error: Could not load the "sharp" module using the darwin-arm64 runtime'>
-
-    This may be due to an outdated version of node. Try the following:
-    1. Remove the currently-installed version of the CLI: `npm remove -g mint`
-    2. Upgrade to Node v19 or higher.
-    3. Reinstall the CLI: `npm i -g mint`
-  </Accordion>
-
-  <Accordion title="Issue: Encountering an unknown error">
-  
-    Solution: Go to the root of your device and delete the `~/.mintlify` folder. Then run `mint dev` again.
-  </Accordion>
-</AccordionGroup>
-
-Curious about what changed in the latest CLI version? Check out the [CLI changelog](https://www.npmjs.com/package/mintlify?activeTab=versions).
+<Tip>
+  For production, set <code>TRON_API_BASE=https://tron.tera.space</code> and use Bearer <code>123456</code> inside Lisa.
+</Tip>

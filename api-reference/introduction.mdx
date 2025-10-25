@@ -1,33 +1,68 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: 'API Overview'
+description: 'Key endpoints for Dashboard, Lisa, and Tron'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Dashboard server routes (proxies)
 
-## Welcome
+- `POST /api/agents/trigger` → Lisa `POST /v1/consumer/agents/trigger`
+- `GET /api/agents/runs/:id` → Lisa `GET /v1/consumer/agents/runs/:id`
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+Headers:
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+```
+x-bc-consumer: <consumerSecret>
+content-type: application/json
+```
 
-## Authentication
+## Lisa (Cloudflare Worker)
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+- `POST /v1/consumer/agents/trigger`
+
+Request:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{ "agent": "glitter", "prompt": "go to google", "stepLimit": 20 }
+```
+
+Response (202):
+
+```json
+{ "runId": "...", "cdpUrl": "wss://...", "taurineSessionId": "..." }
+```
+
+- `GET /v1/consumer/agents/runs/:id` — returns Tron JSON for the run
+
+- `DELETE /v1/consumer/session?sessionId=...` — stop the Taurine session
+
+Auth: `Authorization: Bearer <consumerSecret>` (from Dashboard exchange).
+
+## Tron (Agents)
+
+- `POST /v1/task/create`
+
+```bash
+curl -X POST "$TRON/v1/task/create" \\
+  -H "Authorization: Bearer 123456" -H "content-type: application/json" \\
+  -d '{"agent":"glitter","prompt":"go to google","stepLimit":20}'
+```
+
+- `GET /v1/task/:id`
+
+```bash
+curl -H "Authorization: Bearer 123456" "$TRON/v1/task/<id>"
+```
+
+Returns:
+
+```json
+{
+  "id": "...",
+  "task": "agent",
+  "state": "completed",
+  "inputTokens": 8048,
+  "outputTokens": 1005,
+  "data": { "cdpUrl": "wss://..." },
+  "result": { "answer": "..." }
+}
 ```
