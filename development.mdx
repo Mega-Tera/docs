@@ -1,65 +1,41 @@
 ---
-title: 'Development'
-description: 'Run Dashboard + Lisa locally; run Tron locally or use hosted'
+title: 'Client Integration'
+description: 'Examples for calling the Browser & Agent APIs from your app'
 ---
 
-## Dashboard (Next on Cloudflare)
+## Node (fetch)
 
-```bash
-cd cdp-as-a-service-dashboard
-npm install
-npm run dev
-# Open http://localhost:3000
+```ts
+const API_BASE = process.env.API_BASE // e.g. https://lisa-taurine.tera.space
+const API_KEY = process.env.API_KEY
+
+// Trigger an agent
+const trigger = await fetch(`${API_BASE}/v1/consumer/agents/trigger`, {
+  method: 'POST',
+  headers: { 'content-type': 'application/json', authorization: `Bearer ${API_KEY}` },
+  body: JSON.stringify({ agent: 'glitter', prompt: 'go to google', stepLimit: 20 })
+}).then(r => r.json())
+
+// Poll the run
+const run = await fetch(`${API_BASE}/v1/consumer/agents/runs/${trigger.runId}`, {
+  headers: { authorization: `Bearer ${API_KEY}` }
+}).then(r => r.json())
+
+// Stop the browser (optional)
+await fetch(`${API_BASE}/v1/consumer/session?sessionId=${trigger.taurineSessionId}`, {
+  method: 'DELETE', headers: { authorization: `Bearer ${API_KEY}` }
+})
 ```
 
-Environment used by the Dashboard server routes:
-
-- <code>LISA_BASE</code> — base URL to Lisa (e.g., <code>https://lisa-taurine.tera.space</code>)
-- <code>LISA_JWT_SECRET</code> — must match Lisa’s <code>CONSUMER_JWT_SECRET</code>
-
-## Lisa (Cloudflare Worker)
+## Browser API quick calls
 
 ```bash
-cd Taurine/lisa
-wrangler dev
-# Or deploy: wrangler deploy
+# Start a browser
+curl -X POST "$API_BASE/v1/consumer/session" -H "Authorization: Bearer $API_KEY" -H "content-type: application/json" -d '{}'
+
+# List sessions
+curl "$API_BASE/v1/consumer/session/list?page=1&pageSize=20" -H "Authorization: Bearer $API_KEY"
+
+# Stop a session
+curl -X DELETE "$API_BASE/v1/consumer/session?sessionId=$SESSION_ID" -H "Authorization: Bearer $API_KEY"
 ```
-
-Required env bindings:
-
-- <code>PROD_DB</code> (D1)
-- <code>TRON_API_BASE</code>, <code>TRON_API_KEY</code>
-- <code>BILLING_URL</code>, <code>BILLING_SERVICE_SECRET</code>
-- <code>CONSUMER_JWT_SECRET</code>, <code>FUJI_API_KEY</code>
-
-## Tron (Agents)
-
-Use hosted or run locally:
-
-```bash
-cd Roadrunner-Tron
-npm install
-docker compose up -d redis
-npm run docker:build:linux
-docker compose up -d api worker
-# API on http://localhost:3000
-```
-
-Lisa expects Tron endpoints:
-
-- <code>POST /v1/task/create</code>
-- <code>GET /v1/task/:id</code>
-
-## Billing Worker
-
-```bash
-cd billing-worker
-wrangler dev
-# Or wrangler deploy
-```
-
-Set <code>SERVICE_SECRET_LISA</code>/<code>SERVICE_SECRET_DASHBOARD</code> and optional rate vars.
-
-<Tip>
-  For production, set <code>TRON_API_BASE=https://tron.tera.space</code> and use Bearer <code>123456</code> inside Lisa.
-</Tip>

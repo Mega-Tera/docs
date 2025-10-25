@@ -1,23 +1,11 @@
 ---
 title: 'API Overview'
-description: 'Key endpoints for Dashboard, Lisa, and Tron'
+description: 'Browser (CDP) API and Agent API endpoints'
 ---
 
-## Dashboard server routes (proxies)
+## Agent API
 
-- `POST /api/agents/trigger` → Lisa `POST /v1/consumer/agents/trigger`
-- `GET /api/agents/runs/:id` → Lisa `GET /v1/consumer/agents/runs/:id`
-
-Headers:
-
-```
-x-bc-consumer: <consumerSecret>
-content-type: application/json
-```
-
-## Lisa (Cloudflare Worker)
-
-- `POST /v1/consumer/agents/trigger`
+`POST /v1/consumer/agents/trigger`
 
 Request:
 
@@ -31,38 +19,15 @@ Response (202):
 { "runId": "...", "cdpUrl": "wss://...", "taurineSessionId": "..." }
 ```
 
-- `GET /v1/consumer/agents/runs/:id` — returns Tron JSON for the run
+- `GET /v1/consumer/agents/runs/:id` — returns run state and usage
 
 - `DELETE /v1/consumer/session?sessionId=...` — stop the Taurine session
 
-Auth: `Authorization: Bearer <consumerSecret>` (from Dashboard exchange).
+Auth: `Authorization: Bearer <API_KEY>`
 
-## Tron (Agents)
+## Browser API
 
-- `POST /v1/task/create`
-
-```bash
-curl -X POST "$TRON/v1/task/create" \\
-  -H "Authorization: Bearer 123456" -H "content-type: application/json" \\
-  -d '{"agent":"glitter","prompt":"go to google","stepLimit":20}'
-```
-
-- `GET /v1/task/:id`
-
-```bash
-curl -H "Authorization: Bearer 123456" "$TRON/v1/task/<id>"
-```
-
-Returns:
-
-```json
-{
-  "id": "...",
-  "task": "agent",
-  "state": "completed",
-  "inputTokens": 8048,
-  "outputTokens": 1005,
-  "data": { "cdpUrl": "wss://..." },
-  "result": { "answer": "..." }
-}
-```
+- `POST /v1/consumer/session` — start a browser
+- `GET /v1/consumer/session?sessionId=...` — read status
+- `DELETE /v1/consumer/session?sessionId=...` — stop the browser
+- `GET /v1/consumer/session/list?page=&pageSize=` — list sessions (paginated)

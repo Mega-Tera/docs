@@ -1,0 +1,38 @@
+---
+title: "Using the APIs"
+description: "Browser (CDP) API and Agent API overview"
+---
+
+## Authentication
+
+Add your consumer API key to the Authorization header:
+
+```
+Authorization: Bearer <API_KEY>
+```
+
+## Agent API
+
+- `POST /v1/consumer/agents/trigger` — start an agent run
+  - Body: `{ agent: "glitter", prompt: "go to google", stepLimit?: number }`
+  - Returns: `{ runId, cdpUrl, taurineSessionId }`
+
+- `GET /v1/consumer/agents/runs/:id` — fetch run state and token usage
+
+- `DELETE /v1/consumer/session?sessionId=...` — stop the browser created for this run
+
+See also:
+
+- What is an agent task and how to run it → [/guides/agent-tasks](/guides/agent-tasks)
+
+## Browser (CDP) API
+
+- `POST /v1/consumer/session` — start a new browser
+- `GET /v1/consumer/session?sessionId=...` — read status
+- `DELETE /v1/consumer/session?sessionId=...` — stop the browser
+- `GET /v1/consumer/session/list?page=&pageSize=` — list sessions (paginated)
+
+See also:
+
+- Connect Playwright / Puppeteer → [/guides/cdp-playwright](/guides/cdp-playwright)
+- Get a CDP URL from the Dashboard → [/guides/cdp-dashboard](/guides/cdp-dashboard)

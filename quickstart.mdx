@@ -1,62 +1,18 @@
 ---
 title: "Quickstart"
-description: "Configure env, deploy Workers, and run agents"
+description: "Authenticate and call the Browser & Agent APIs"
 ---
 
-## Prerequisites
+## Get your API key
 
-- Node 20+
-- Cloudflare account + Wrangler CLI
-- Optional: Docker (to run Tron locally)
+- Go to the Dashboard → Settings to copy your consumer API key.
+- Send it in the `Authorization: Bearer <your-key>` header for all requests below.
 
-## 1) Configure environment
-
-Set these core variables per service:
-
-<Columns cols={2}>
-  <Card title="Lisa (Worker)" icon="cloud">
-    <ul>
-      <li><code>TRON_API_BASE</code> = <code>https://tron.tera.space</code></li>
-      <li><code>TRON_API_KEY</code> = <code>123456</code> (Bearer used for Tron)</li>
-      <li><code>BILLING_URL</code> (Billing Worker URL)</li>
-      <li><code>BILLING_SERVICE_SECRET</code> (shared key)</li>
-      <li><code>CONSUMER_JWT_SECRET</code> (JWT for Dashboard→Lisa)</li>
-      <li>D1 binding <code>PROD_DB</code></li>
-    </ul>
-  </Card>
-  <Card title="Dashboard (Next)" icon="gauge">
-    <ul>
-      <li><code>LISA_BASE</code> (e.g., <code>https://lisa-taurine.tera.space</code>)</li>
-      <li><code>LISA_JWT_SECRET</code> (must match Lisa)</li>
-    </ul>
-  </Card>
-</Columns>
-
-Billing Worker:
-
-- <code>SERVICE_SECRET_LISA</code>, <code>SERVICE_SECRET_DASHBOARD</code>
-- Optional rate vars: <code>RATE_CENTS_PER_100K_AI_INPUT</code>, <code>RATE_CENTS_PER_100K_AI_OUTPUT</code>
-
-## 2) Deploy Workers
-
-From each folder:
+## Trigger an agent
 
 ```bash
-wrangler deploy
-```
-
-## 3) Run Tron (choose one)
-
-- Use hosted: <code>TRON_API_BASE=https://tron.tera.space</code> and Bearer <code>123456</code>
-- Or local: in <code>Roadrunner-Tron</code> run Docker compose and set <code>TRON_API_BASE</code> accordingly
-
-## 4) Trigger an agent
-
-Dashboard calls Lisa which calls Tron.
-
-```bash
-curl -X POST "$LISA_BASE/v1/consumer/agents/trigger" \\
-  -H "Authorization: Bearer $CONSUMER_SECRET" \\
+curl -X POST "$API_BASE/v1/consumer/agents/trigger" \\
+  -H "Authorization: Bearer $API_KEY" \\
   -H "content-type: application/json" \\
   -d '{"agent":"glitter","prompt":"go to google","stepLimit":20}'
 ```
@@ -64,17 +20,17 @@ curl -X POST "$LISA_BASE/v1/consumer/agents/trigger" \\
 Poll the run:
 
 ```bash
-curl -H "Authorization: Bearer $CONSUMER_SECRET" \\
-  "$LISA_BASE/v1/consumer/agents/runs/$RUN_ID"
+curl -H "Authorization: Bearer $API_KEY" \\
+  "$API_BASE/v1/consumer/agents/runs/$RUN_ID"
 ```
 
 Stop the browser session:
 
 ```bash
-curl -X DELETE -H "Authorization: Bearer $CONSUMER_SECRET" \\
-  "$LISA_BASE/v1/consumer/session?sessionId=$TAURINE_SESSION_ID"
+curl -X DELETE -H "Authorization: Bearer $API_KEY" \\
+  "$API_BASE/v1/consumer/session?sessionId=$TAURINE_SESSION_ID"
 ```
 
 <Tip>
-  The Dashboard already proxies these calls via <code>/api/agents/*</code>.
+  You can also call through the Dashboard server proxies under <code>/api/agents/*</code> if you prefer same‑origin requests.
 </Tip>

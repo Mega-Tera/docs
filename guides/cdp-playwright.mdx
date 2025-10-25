@@ -1,0 +1,46 @@
+---
+title: "Use CDP with Playwright / Puppeteer"
+description: "Connect to a managed browser using your CDP URL"
+---
+
+You can connect to our managed Chrome using the `cdpUrl` returned from the Agent API, or one created via the Browser API.
+
+## Playwright (Node)
+
+```ts
+import { chromium } from 'playwright'
+
+const cdpUrl = process.env.CDP_URL // e.g. wss://.../v1/consumer/<sessionId>/devtools/browser/...
+
+async function main() {
+  const browser = await chromium.connectOverCDP(cdpUrl)
+  const context = browser.contexts()[0] || await browser.newContext()
+  const page = context.pages()[0] || await context.newPage()
+  await page.goto('https://example.com')
+  console.log(await page.title())
+  await browser.close() // closes the remote connection (not the remote browser)
+}
+
+main().catch(console.error)
+```
+
+## Puppeteer
+
+```ts
+import puppeteer from 'puppeteer-core'
+
+const cdpUrl = process.env.CDP_URL
+
+const browser = await puppeteer.connect({ browserWSEndpoint: cdpUrl })
+const page = await browser.newPage()
+await page.goto('https://example.com')
+console.log(await page.title())
+await browser.disconnect()
+```
+
+## Tips
+
+- CDP URLs expire when the session stops. Create a new session to get a fresh URL.
+- For long‑running jobs, reconnect if your client drops; the browser keeps running until you stop it.
+- To programmatically create a CDP URL, use `POST /v1/consumer/session` and read `GET /v1/consumer/session?sessionId=...`.
+

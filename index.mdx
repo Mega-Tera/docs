@@ -1,40 +1,34 @@
 ---
 title: "Browser Cash"
-description: "Docs for the Dashboard, Lisa (Workers), Tron (Agents), and Billing"
+description: "CDP (browser) as a service and Agents as a service"
 ---
 
 ## What is Browser Cash?
 
-Browser Cash is a hosted browser + agent platform with four parts:
+Browser Cash provides two products your app can call directly:
 
-- Dashboard (Next.js on Cloudflare) — user UI + server API proxies
-- Lisa (Cloudflare Worker) — session orchestration, agent trigger, billing gate
-- Tron (Agents) — task runner that executes the agent against a CDP URL
-- Billing Worker — wallet balance, usage metering, and checkout
+- Browser API (CDP as a service) — start/stop headless browsers and list sessions
+- Agent API (Agents as a service) — run an agent against a managed browser and get results
 
 <Card title="Quickstart" icon="rocket" href="/quickstart" horizontal>
-  Configure env, deploy Workers, run Tron or point to our hosted Tron, and use the Dashboard.
+  Get your API key, call the Browser and Agent APIs, and see results in the Dashboard.
 </Card>
 
 <Columns cols={2}>
-  <Card title="Local Development" icon="rectangle-terminal" href="/development">
-    Run Dashboard + Lisa locally; run Tron via Docker or use hosted.
+  <Card title="Client Integration" icon="rectangle-terminal" href="/development">
+    Code examples for authenticating and calling the APIs from your app.
   </Card>
   <Card title="API Endpoints" icon="terminal" href="/api-reference/introduction">
-    Call Lisa and Tron directly or via the Dashboard server proxies.
+    Browser API and Agent API endpoints with request/response examples.
   </Card>
 </Columns>
 
 ### High-level flow
 
-1) Dashboard POST `/api/agents/trigger` → Lisa `POST /v1/consumer/agents/trigger`
+1) Agent API: trigger a run → receive `{ runId, cdpUrl, taurineSessionId }`
 
-2) Lisa provisions a browser session, resolves a CDP URL, then calls Tron `POST ${TRON_API_BASE}/v1/task/create` with Bearer.
+2) Poll the run by id → receive live `state`, token usage, and (optional) result text
 
-3) Dashboard GET `/api/agents/runs/:id` → Lisa `GET /v1/consumer/agents/runs/:id` → Tron `GET ${TRON_API_BASE}/v1/task/:id`.
+3) Stop the browser at any time using the `taurineSessionId`
 
-4) Stop uses Lisa `DELETE /v1/consumer/session?sessionId=...`.
-
-<Note>
-  For production, set `TRON_API_BASE=https://tron.tera.space` and use `Authorization: Bearer 123456` when Lisa calls Tron.
-</Note>
+4) Browser API: programmatically start/stop browsers and list sessions
