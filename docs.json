@@ -1,7 +1,7 @@
 {
     "$schema":  "https://mintlify.com/docs.json",
     "theme":  "mint",
-    "name":  "MegaTera Docs",
+    "name":  "Mega Tera Corp",
     "colors":  {
                    "primary":  "#F0B15C",
                    "light":  "#FFD38A",
@@ -91,9 +91,9 @@
                    },
     "footer":  {
                    "socials":  {
-                                   "x":  "https://x.com/mintlify",
-                                   "github":  "https://github.com/mintlify",
-                                   "linkedin":  "https://linkedin.com/company/mintlify"
+                                   "x":  "https://x.com/aibrowsers",
+                                   "github":  "https://github.com/Mega-Tera",
+                                   "linkedin":  "https://linkedin.com/company/megatera"
                                }
                }
 }
