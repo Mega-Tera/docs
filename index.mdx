@@ -7,6 +7,13 @@ description: "Power your app with managed browsers (CDP) and autonomous agents."
   <Tab title="Start Browser Session">
     <CodeGroup>
 
+```bash cURL
+curl -X POST "$API_BASE/v1/consumer/session" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "content-type: application/json" \
+  -d '{}'
+```
+
 ```python Python
 import os
 import requests
@@ -44,19 +51,19 @@ console.log("sessionId:", data.sessionId);
 console.log("cdpUrl:", data.cdpUrl);
 ```
 
-```bash cURL
-curl -X POST "$API_BASE/v1/consumer/session" \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "content-type: application/json" \
-  -d '{}'
-```
-
     </CodeGroup>
 
   </Tab>
 
   <Tab title="Trigger Agent Task">
     <CodeGroup>
+
+```bash cURL
+curl -X POST "$API_BASE/v1/consumer/agents/trigger" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "content-type: application/json" \
+  -d '{"agent":"glitter","prompt":"go to google","stepLimit":20}'
+```
 
 ```python Python
 import os
@@ -86,20 +93,9 @@ const res = await fetch(API_BASE + "/v1/consumer/agents/trigger", {
     Authorization: "Bearer " + API_KEY,
     "content-type": "application/json",
   },
-  body: JSON.stringify({
-    agent: "glitter",
-    prompt: "go to google",
-    stepLimit: 20,
-  }),
+  body: JSON.stringify({ agent: "glitter", prompt: "go to google", stepLimit: 20 }),
 });
 console.log(await res.json());
-```
-
-```bash cURL
-curl -X POST "$API_BASE/v1/consumer/agents/trigger" \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "content-type: application/json" \
-  -d '{"agent":"glitter","prompt":"go to google","stepLimit":20}'
 ```
 
     </CodeGroup>
@@ -108,6 +104,16 @@ curl -X POST "$API_BASE/v1/consumer/agents/trigger" \
 
   <Tab title="List / Stop Sessions">
     <CodeGroup>
+
+```bash cURL
+# List sessions
+curl "$API_BASE/v1/consumer/session/list?page=1&pageSize=20" \
+  -H "Authorization: Bearer $API_KEY"
+
+# Stop a session
+curl -X DELETE "$API_BASE/v1/consumer/session?sessionId=$SESSION_ID" \
+  -H "Authorization: Bearer $API_KEY"
+```
 
 ```python Python
 import os
@@ -161,22 +167,17 @@ if (SESSION_ID) {
 }
 ```
 
-```bash cURL
-# List sessions
-curl "$API_BASE/v1/consumer/session/list?page=1&pageSize=20" \
-  -H "Authorization: Bearer $API_KEY"
-
-# Stop a session
-curl -X DELETE "$API_BASE/v1/consumer/session?sessionId=$SESSION_ID" \
-  -H "Authorization: Bearer $API_KEY"
-```
-
     </CodeGroup>
 
   </Tab>
 
   <Tab title="Poll Agent Run">
     <CodeGroup>
+
+```bash cURL
+curl -H "Authorization: Bearer $API_KEY" \
+  "$API_BASE/v1/consumer/agents/runs/$RUN_ID"
+```
 
 ```python Python
 import os
@@ -202,11 +203,6 @@ const res = await fetch(API_BASE + "/v1/consumer/agents/runs/" + RUN_ID, {
   headers: { Authorization: "Bearer " + API_KEY },
 });
 console.log(await res.json());
-```
-
-```bash cURL
-curl -H "Authorization: Bearer $API_KEY" \
-  "$API_BASE/v1/consumer/agents/runs/$RUN_ID"
 ```
 
     </CodeGroup>

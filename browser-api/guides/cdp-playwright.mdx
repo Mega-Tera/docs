@@ -5,15 +5,32 @@ description: "Connect to a managed browser using your CDP URL"
 
 You can connect to our managed Chrome using the `cdpUrl` returned from the Agent API, or one created via the Browser API.
 
-## Playwright (Node)
+## Playwright
 
-```ts
+<CodeGroup>
+
+```python Python
+from playwright.sync_api import sync_playwright
+import os
+
+cdp_url = os.getenv("CDP_URL")  # wss://.../v1/consumer/<sessionId>/devtools/browser/...
+
+with sync_playwright() as p:
+    browser = p.chromium.connect_over_cdp(cdp_url)
+    context = browser.contexts[0] if browser.contexts else browser.new_context()
+    page = context.pages[0] if context.pages else context.new_page()
+    page.goto("https://example.com")
+    print(page.title())
+    browser.close()  # closes the remote connection (not the remote browser)
+```
+
+```typescript TypeScript
 import { chromium } from 'playwright'
 
 const cdpUrl = process.env.CDP_URL // e.g. wss://.../v1/consumer/<sessionId>/devtools/browser/...
 
 async function main() {
-  const browser = await chromium.connectOverCDP(cdpUrl)
+  const browser = await chromium.connectOverCDP(cdpUrl!)
   const context = browser.contexts()[0] || await browser.newContext()
   const page = context.pages()[0] || await context.newPage()
   await page.goto('https://example.com')
@@ -24,12 +41,14 @@ async function main() {
 main().catch(console.error)
 ```
 
+</CodeGroup>
+
 ## Puppeteer
 
-```ts
+```typescript TypeScript
 import puppeteer from 'puppeteer-core'
 
-const cdpUrl = process.env.CDP_URL
+const cdpUrl = process.env.CDP_URL!
 
 const browser = await puppeteer.connect({ browserWSEndpoint: cdpUrl })
 const page = await browser.newPage()
@@ -41,6 +60,6 @@ await browser.disconnect()
 ## Tips
 
 - CDP URLs expire when the session stops. Create a new session to get a fresh URL.
-- For long‑running jobs, reconnect if your client drops; the browser keeps running until you stop it.
+- For long-running jobs, reconnect if your client drops; the browser keeps running until you stop it.
 - To programmatically create a CDP URL, use `POST /v1/consumer/session` and read `GET /v1/consumer/session?sessionId=...`.
 
