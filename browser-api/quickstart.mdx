@@ -1,0 +1,37 @@
+---
+title: "Quickstart"
+description: "Start, list, and stop managed browsers via API"
+---
+
+## Get an API key
+
+- Open the Dashboard and copy your consumer API key.
+- Send it in the `Authorization: Bearer <API_KEY>` header.
+
+## Start a browser session
+
+```bash
+curl -X POST "$API_BASE/v1/consumer/session" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "content-type: application/json" \
+  -d '{}'
+```
+
+## List and stop sessions
+
+```bash
+# List sessions
+curl "$API_BASE/v1/consumer/session/list?page=1&pageSize=20" \
+  -H "Authorization: Bearer $API_KEY"
+
+# Stop a session
+curl -X DELETE "$API_BASE/v1/consumer/session?sessionId=$SESSION_ID" \
+  -H "Authorization: Bearer $API_KEY"
+```
+
+## Connect with CDP
+
+Use the returned `cdpUrl` to attach Playwright or Puppeteer.
+
+- Playwright: [/browser-api/guides/cdp-playwright](/browser-api/guides/cdp-playwright)
+- From the Dashboard: [/browser-api/guides/cdp-dashboard](/browser-api/guides/cdp-dashboard)

@@ -1,94 +1,110 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "MegaTera Docs",
-  "colors": {
-    "primary": "#F0B15C",
-    "light": "#FFD38A",
-    "dark": "#C27C2C"
-  },
-  "favicon": "/favicon.svg",
-  "navigation": {
-    "tabs": [
-      {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
-          },
-          {
-            "group": "Using the APIs",
-            "pages": [
-              "services/lisa",
-              "guides/agent-tasks",
-              "guides/cdp-playwright",
-              "guides/cdp-dashboard",
-              "guides/billing-credits"
-            ]
-          },
-          {
-            "group": "Reference",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API reference",
-        "groups": [
-          {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          }
-        ]
-      }
-    ],
-    "global": {
-      "anchors": []
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:support@tera.space"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://bc-dashboard.alex-13e.workers.dev"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
-  }
+    "$schema":  "https://mintlify.com/docs.json",
+    "theme":  "mint",
+    "name":  "MegaTera Docs",
+    "colors":  {
+                   "primary":  "#F0B15C",
+                   "light":  "#FFD38A",
+                   "dark":  "#C27C2C"
+               },
+    "favicon":  "/favicon.svg",
+    "navigation":  {
+                       "tabs":  [
+                                    {
+                                        "tab":  "Docs",
+                                        "groups":  [
+                                                       {
+                                                           "group":  "Getting Started",
+                                                           "pages":  [
+                                                                         "index",
+                                                                         "pricing"
+                                                                     ]
+                                                       },
+                                                       {
+                                                           "group":  "Browser API",
+                                                           "pages":  [
+                                                                         "browser-api/quickstart",
+                                                                         {
+                                                                             "group":  "Guides",
+                                                                             "pages":  [
+                                                                                           "browser-api/guides/cdp-playwright",
+                                                                                           "browser-api/guides/cdp-dashboard"
+                                                                                       ]
+                                                                         }
+                                                                     ]
+                                                       },
+                                                       {
+                                                           "group":  "Agent API",
+                                                           "pages":  [
+                                                                         "agent-api/quickstart",
+                                                                         {
+                                                                             "group":  "Guides",
+                                                                             "pages":  [
+                                                                                           "agent-api/guides/agent-tasks"
+                                                                                       ]
+                                                                         }
+                                                                     ]
+                                                       },
+                                                       {
+                                                           "group":  "Account",
+                                                           "pages":  [
+                                                                         "account/billing"
+                                                                     ]
+                                                       }
+                                                   ]
+                                    },
+                                    {
+                                        "tab":  "API reference",
+                                        "groups":  [
+                                                       {
+                                                           "group":  "API documentation",
+                                                           "pages":  [
+                                                                         "api-reference/introduction"
+                                                                     ]
+                                                       }
+                                                   ]
+                                    }
+                                ],
+                       "global":  {
+                                      "anchors":  [
+
+                                                  ]
+                                  }
+                   },
+    "logo":  {
+                 "light":  "/logo/light.svg",
+                 "dark":  "/logo/dark.svg"
+             },
+    "navbar":  {
+                   "links":  [
+                                 {
+                                     "label":  "Support",
+                                     "href":  "mailto:support@tera.space"
+                                 }
+                             ],
+                   "primary":  {
+                                   "type":  "button",
+                                   "label":  "Dashboard",
+                                   "href":  "https://bc-dashboard.alex-13e.workers.dev"
+                               }
+               },
+    "contextual":  {
+                       "options":  [
+                                       "copy",
+                                       "view",
+                                       "chatgpt",
+                                       "claude",
+                                       "perplexity",
+                                       "mcp",
+                                       "cursor",
+                                       "vscode"
+                                   ]
+                   },
+    "footer":  {
+                   "socials":  {
+                                   "x":  "https://x.com/mintlify",
+                                   "github":  "https://github.com/mintlify",
+                                   "linkedin":  "https://linkedin.com/company/mintlify"
+                               }
+               }
 }

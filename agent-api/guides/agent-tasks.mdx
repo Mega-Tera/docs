@@ -1,4 +1,4 @@
----
+﻿---
 title: "Agent tasks"
 description: "What they are and how to run them"
 ---
@@ -10,9 +10,9 @@ An agent task runs a prebuilt agent (e.g., `glitter`) against a managed Chrome i
 ## Trigger a run
 
 ```bash
-curl -X POST "$API_BASE/v1/consumer/agents/trigger" \\
-  -H "Authorization: Bearer $API_KEY" \\
-  -H "content-type: application/json" \\
+curl -X POST "$API_BASE/v1/consumer/agents/trigger" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "content-type: application/json" \
   -d '{"agent":"glitter","prompt":"go to google","stepLimit":20}'
 ```
 
@@ -25,7 +25,7 @@ Response (202):
 ## Poll the run
 
 ```bash
-curl -H "Authorization: Bearer $API_KEY" \\
+curl -H "Authorization: Bearer $API_KEY" \
   "$API_BASE/v1/consumer/agents/runs/$RUN_ID"
 ```
 
@@ -34,7 +34,7 @@ Returns fields like `state`, `inputTokens`, `outputTokens`, and optional `result
 ## Stop the browser (optional)
 
 ```bash
-curl -X DELETE -H "Authorization: Bearer $API_KEY" \\
+curl -X DELETE -H "Authorization: Bearer $API_KEY" \
   "$API_BASE/v1/consumer/session?sessionId=$TAURINE_SESSION_ID"
 ```
 
@@ -42,5 +42,4 @@ curl -X DELETE -H "Authorization: Bearer $API_KEY" \\
 
 - `stepLimit` caps how many autonomous steps the agent can take.
 - The `cdpUrl` lets you live‑view the run using CDP tooling.
-- Credits are debited after the run based on token usage. See [/guides/billing-credits](/guides/billing-credits).
-
+- Credits are debited after the run based on token usage. See [/account/billing](/account/billing).
