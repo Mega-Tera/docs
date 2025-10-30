@@ -1,122 +1,23 @@
 ---
 title: "Quickstart"
-description: "Start, list, and stop managed browsers via API"
+description: "Get started with our browsers"
 ---
 
-## Get an API key
+## Quickconnect vs Session API:
 
-- Open the Dashboard and copy your consumer API key.
-- Send it in the `Authorization: Bearer <API_KEY>` header.
+| Feature | Quickconnect | Session API |
+|---|---:|---:|
+| One-line summary | Instant, zero-config browser access for quick tests and demos | Programmatic control of browser sessions for building workflows and automations |
+| Setup & dependencies | Minimal — no SDK or server required; open a quick connection or URL | SDK or REST/websocket calls; integrate with your app/backend |
+| Time to get started | Immediate (seconds) | Minutes — requires coding and auth setup |
 
-## Start a browser session
+## Choose how to get started
 
-<CodeGroup>
-
-```bash cURL
-curl -X POST "$API_BASE/v1/consumer/session" \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "content-type: application/json" \
-  -d '{}'
-```
-
-```python Python
-import os, requests
-
-API_BASE = os.getenv('API_BASE')
-API_KEY = os.getenv('API_KEY')
-
-resp = requests.post(
-    f"{API_BASE}/v1/consumer/session",
-    headers={
-        "Authorization": f"Bearer {API_KEY}",
-        "content-type": "application/json",
-    },
-    json={},
-)
-print(resp.json())
-```
-
-```typescript TypeScript
-const API_BASE = process.env.API_BASE!;
-const API_KEY = process.env.API_KEY!;
-
-const res = await fetch(`${API_BASE}/v1/consumer/session`, {
-  method: 'POST',
-  headers: {
-    Authorization: `Bearer ${API_KEY}`,
-    'content-type': 'application/json',
-  },
-  body: JSON.stringify({}),
-});
-console.log(await res.json());
-```
-
-</CodeGroup>
-
-## List and stop sessions
-
-<CodeGroup>
-
-```bash cURL
-# List sessions
-curl "$API_BASE/v1/consumer/session/list?page=1&pageSize=20" \
-  -H "Authorization: Bearer $API_KEY"
-
-# Stop a session
-curl -X DELETE "$API_BASE/v1/consumer/session?sessionId=$SESSION_ID" \
-  -H "Authorization: Bearer $API_KEY"
-```
-
-```python Python
-import os, requests
-
-API_BASE = os.getenv('API_BASE')
-API_KEY = os.getenv('API_KEY')
-
-# List
-lst = requests.get(
-    f"{API_BASE}/v1/consumer/session/list?page=1&pageSize=20",
-    headers={"Authorization": f"Bearer {API_KEY}"},
-)
-print(lst.json())
-
-# Stop
-SESSION_ID = os.getenv('SESSION_ID')
-if SESSION_ID:
-    stop = requests.delete(
-        f"{API_BASE}/v1/consumer/session",
-        headers={"Authorization": f"Bearer {API_KEY}"},
-        params={"sessionId": SESSION_ID},
-    )
-    print('stopped', stop.status_code)
-```
-
-```typescript TypeScript
-const API_BASE = process.env.API_BASE!;
-const API_KEY = process.env.API_KEY!;
-
-// List
-const listRes = await fetch(`${API_BASE}/v1/consumer/session/list?page=1&pageSize=20`, {
-  headers: { Authorization: `Bearer ${API_KEY}` },
-});
-console.log(await listRes.json());
-
-// Stop
-const { SESSION_ID } = process.env;
-if (SESSION_ID) {
-  const stopRes = await fetch(`${API_BASE}/v1/consumer/session?sessionId=${SESSION_ID}`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${API_KEY}` },
-  });
-  console.log('stopped', stopRes.status);
-}
-```
-
-</CodeGroup>
-
-## Connect with CDP
-
-Use the returned `cdpUrl` to attach Playwright or Puppeteer.
-
-- Playwright: [/browser-api/guides/cdp-playwright](/browser-api/guides/cdp-playwright)
-- From the Dashboard: [/browser-api/guides/cdp-dashboard](/browser-api/guides/cdp-dashboard)
+<CardGroup cols={2}>
+  <Card title="Quickconnect" href="/browser-api/using-quickconnect" icon="plug">
+    Get started with our browsers immediately with zero configuration or dependencies using Quickconnect.
+  </Card>
+  <Card title="Session API" href="/agent-api/quickstart" icon="webhook">
+    Build complex workflows using our Session API to manage browser sessions programmatically.
+  </Card>
+</CardGroup>

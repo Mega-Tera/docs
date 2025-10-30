@@ -1,99 +1,98 @@
 {
-    "$schema":  "https://mintlify.com/docs.json",
-    "theme":  "mint",
-    "name":  "Mega Tera Corp",
-    "colors":  {
-                   "primary":  "#F0B15C",
-                   "light":  "#FFD38A",
-                   "dark":  "#C27C2C"
-               },
-    "favicon":  "/favicon.svg",
-    "navigation":  {
-                       "tabs":  [
-                                    {
-                                        "tab":  "Docs",
-                                        "groups":  [
-                                                       {
-                                                           "group":  "Getting Started",
-                                                           "pages":  [
-                                                                         "index",
-                                                                         "pricing"
-                                                                     ]
-                                                       },
-                                                       {
-                                                           "group":  "Browser API",
-                                                           "pages":  [
-                                                                         "browser-api/quickstart",
-                                                                         {
-                                                                             "group":  "Guides",
-                                                                             "pages":  [
-                                                                                           "browser-api/guides/cdp-playwright",
-                                                                                           "browser-api/guides/cdp-dashboard"
-                                                                                       ]
-                                                                         }
-                                                                     ]
-                                                       },
-                                                       {
-                                                           "group":  "Agent API",
-                                                           "pages":  [
-                                                                         "agent-api/quickstart",
-                                                                         {
-                                                                             "group":  "Guides",
-                                                                             "pages":  [
-                                                                                           "agent-api/guides/agent-tasks"
-                                                                                       ]
-                                                                         }
-                                                                     ]
-                                                       },
-                                                       {
-                                                           "group":  "Account",
-                                                           "pages":  [
-                                                                         "account/billing"
-                                                                     ]
-                                                       }
-                                                   ]
-                                    }
-                                ],
-                       "global":  {
-                                      "anchors":  [
-
-                                                  ]
-                                  }
-                   },
-    "logo":  {
-                 "light":  "/logo/light.svg",
-                 "dark":  "/logo/dark.svg"
-             },
-    "navbar":  {
-                   "links":  [
-                                 {
-                                     "label":  "Support",
-                                     "href":  "mailto:support@tera.space"
-                                 }
-                             ],
-                   "primary":  {
-                                   "type":  "button",
-                                   "label":  "Dashboard",
-                                   "href":  "https://bc-dashboard.alex-13e.workers.dev"
-                               }
-               },
-    "contextual":  {
-                       "options":  [
-                                       "copy",
-                                       "view",
-                                       "chatgpt",
-                                       "claude",
-                                       "perplexity",
-                                       "mcp",
-                                       "cursor",
-                                       "vscode"
-                                   ]
-                   },
-    "footer":  {
-                   "socials":  {
-                                   "x":  "https://x.com/aibrowsers",
-                                   "github":  "https://github.com/Mega-Tera",
-                                   "linkedin":  "https://linkedin.com/company/megatera"
-                               }
-               }
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "mint",
+    "name": "Mega Tera Corp",
+    "colors": {
+        "primary": "#F0B15C",
+        "light": "#FFD38A",
+        "dark": "#C27C2C"
+    },
+    "favicon": "/favicon.svg",
+    "navigation": {
+        "tabs": [
+            {
+                "tab": "Docs",
+                "groups": [
+                    {
+                        "group": "Getting Started",
+                        "pages": [
+                            "index",
+                            "pricing"
+                        ]
+                    },
+                    {
+                        "group": "Browser API",
+                        "pages": [
+                            "browser-api/quickstart",
+                            "browser-api/using-quickconnect",
+                            {
+                                "group": "Guides",
+                                "pages": [
+                                    "browser-api/guides/cdp-playwright",
+                                    "browser-api/guides/cdp-dashboard"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "group": "Agent API",
+                        "pages": [
+                            "agent-api/quickstart",
+                            {
+                                "group": "Guides",
+                                "pages": [
+                                    "agent-api/guides/agent-tasks"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "group": "Account",
+                        "pages": [
+                            "account/billing"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "global": {
+            "anchors": []
+        }
+    },
+    "logo": {
+        "light": "/logo/light.svg",
+        "dark": "/logo/dark.svg"
+    },
+    "navbar": {
+        "links": [
+            {
+                "label": "Support",
+                "href": "mailto:support@tera.space"
+            }
+        ],
+        "primary": {
+            "type": "button",
+            "label": "Dashboard",
+            "href": "https://bc-dashboard.alex-13e.workers.dev"
+        }
+    },
+    "contextual": {
+        "options": [
+            "copy",
+            "view",
+            "chatgpt",
+            "claude",
+            "perplexity",
+            "mcp",
+            "cursor",
+            "vscode"
+        ]
+    },
+    "footer": {
+        "socials": {
+            "x": "https://x.com/aibrowsers",
+            "github": "https://github.com/Mega-Tera",
+            "linkedin": "https://linkedin.com/company/megatera"
+        }
+    }
 }
