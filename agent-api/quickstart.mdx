@@ -1,22 +1,29 @@
 ---
 title: "Quickstart"
-description: "Trigger an agent run and poll results"
+description: "Create an agent task and fetch results"
 ---
 
 ## Get an API key
 
-- Open the Dashboard and copy your consumer API key.
-- Send it in the `Authorization: Bearer <API_KEY>` header.
+- Copy your Agent API key from the dashboard.
+- Send it in the header: `Authorization: Bearer <AGENT_API_KEY>`.
 
-## Trigger an agent
+Base URL: `https://tron.tera.space`
+
+You can optionally set environment variables in your shell:
+
+- `API_BASE=https://tron.tera.space`
+- `API_KEY=<your key>`
+
+## Create a task
 
 <CodeGroup>
 
 ```bash cURL
-curl -X POST "$API_BASE/v1/consumer/agents/trigger" \
+curl -X POST "$API_BASE/v1/task/create" \
   -H "Authorization: Bearer $API_KEY" \
   -H "content-type: application/json" \
-  -d '{"agent":"glitter","prompt":"go to google","stepLimit":20}'
+  -d '{"agent":"glitter","prompt":"What does example.com's homepage say?","mode":"text","stepLimit":10}'
 ```
 
 ```python Python
@@ -26,12 +33,12 @@ API_BASE = os.getenv('API_BASE')
 API_KEY = os.getenv('API_KEY')
 
 resp = requests.post(
-    f"{API_BASE}/v1/consumer/agents/trigger",
+    f"{API_BASE}/v1/task/create",
     headers={
         "Authorization": f"Bearer {API_KEY}",
         "content-type": "application/json",
     },
-    json={"agent": "glitter", "prompt": "go to google", "stepLimit": 20},
+    json={"agent": "glitter", "prompt": "What does example.com's homepage say?", "mode": "text", "stepLimit": 10},
 )
 print(resp.json())
 ```
@@ -40,32 +47,32 @@ print(resp.json())
 const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
 
-const res = await fetch(`${API_BASE}/v1/consumer/agents/trigger`, {
+const res = await fetch(`${API_BASE}/v1/task/create`, {
   method: 'POST',
   headers: {
     Authorization: `Bearer ${API_KEY}`,
     'content-type': 'application/json',
   },
-  body: JSON.stringify({ agent: 'glitter', prompt: 'go to google', stepLimit: 20 }),
+  body: JSON.stringify({ agent: 'glitter', prompt: "What does example.com's homepage say?", mode: 'text', stepLimit: 10 }),
 });
 console.log(await res.json());
 ```
 
 </CodeGroup>
 
-Response (202):
+Example response (200):
 
 ```json
-{ "runId": "...", "cdpUrl": "wss://...", "taurineSessionId": "..." }
+{ "taskId": "02a94d68-b9e9-49bd-a3e4-54b8426e3550" }
 ```
 
-## Poll the run
+## Get a task
 
 <CodeGroup>
 
 ```bash cURL
 curl -H "Authorization: Bearer $API_KEY" \
-  "$API_BASE/v1/consumer/agents/runs/$RUN_ID"
+  "$API_BASE/v1/task/$TASK_ID"
 ```
 
 ```python Python
@@ -73,10 +80,10 @@ import os, requests
 
 API_BASE = os.getenv('API_BASE')
 API_KEY = os.getenv('API_KEY')
-RUN_ID = os.getenv('RUN_ID')
+TASK_ID = os.getenv('TASK_ID')
 
 resp = requests.get(
-    f"{API_BASE}/v1/consumer/agents/runs/{RUN_ID}",
+    f"{API_BASE}/v1/task/{TASK_ID}",
     headers={"Authorization": f"Bearer {API_KEY}"},
 )
 print(resp.json())
@@ -85,9 +92,9 @@ print(resp.json())
 ```typescript TypeScript
 const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
-const RUN_ID = process.env.RUN_ID!;
+const TASK_ID = process.env.TASK_ID!;
 
-const res = await fetch(`${API_BASE}/v1/consumer/agents/runs/${RUN_ID}`, {
+const res = await fetch(`${API_BASE}/v1/task/${TASK_ID}`, {
   headers: { Authorization: `Bearer ${API_KEY}` },
 });
 console.log(await res.json());
@@ -95,15 +102,15 @@ console.log(await res.json());
 
 </CodeGroup>
 
-Returns fields like `state`, `inputTokens`, `outputTokens`, and optional `result.answer`.
+Typical fields include a `status` (e.g., queued, running, completed, failed) and implementation-specific details like `result` once complete.
 
-## Stop the browser (optional)
+## List tasks
 
 <CodeGroup>
 
 ```bash cURL
-curl -X DELETE -H "Authorization: Bearer $API_KEY" \
-  "$API_BASE/v1/consumer/session?sessionId=$TAURINE_SESSION_ID"
+curl -H "Authorization: Bearer $API_KEY" \
+  "$API_BASE/v1/task/list?pageSize=20&page=1"
 ```
 
 ```python Python
@@ -111,28 +118,32 @@ import os, requests
 
 API_BASE = os.getenv('API_BASE')
 API_KEY = os.getenv('API_KEY')
-SESSION_ID = os.getenv('TAURINE_SESSION_ID')
 
-resp = requests.delete(
-    f"{API_BASE}/v1/consumer/session",
+resp = requests.get(
+    f"{API_BASE}/v1/task/list",
     headers={"Authorization": f"Bearer {API_KEY}"},
-    params={"sessionId": SESSION_ID},
+    params={"pageSize": 20, "page": 1},
 )
-print(resp.status_code)
+print(resp.json())
 ```
 
 ```typescript TypeScript
 const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
-const SESSION_ID = process.env.TAURINE_SESSION_ID!;
 
-const res = await fetch(`${API_BASE}/v1/consumer/session?sessionId=${SESSION_ID}`, {
-  method: 'DELETE',
+const res = await fetch(`${API_BASE}/v1/task/list?pageSize=20&page=1`, {
   headers: { Authorization: `Bearer ${API_KEY}` },
 });
-console.log(res.status);
+console.log(await res.json());
 ```
 
 </CodeGroup>
 
 Learn more in Guides: [/agent-api/guides/agent-tasks](/agent-api/guides/agent-tasks)
+
+Tip: Prefer environment variables over hardcoding keys. In PowerShell, set an env var for the current session with:
+
+```powershell
+$env:API_BASE = "https://tron.tera.space"
+$env:API_KEY = "<your key>"
+```

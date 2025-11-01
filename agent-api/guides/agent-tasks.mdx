@@ -1,21 +1,25 @@
 ﻿---
 title: "Agent tasks"
-description: "What they are and how to run them"
+description: "Create, fetch, and list tasks with the Agent API"
 ---
 
-## What is a browser agent task?
+## What is an agent task?
 
-An agent task runs a prebuilt agent (e.g., `glitter`) against a managed Chrome instance. We provision a browser, give you a `cdpUrl` for live inspection, and stream the task to completion. You can stop the underlying browser at any time.
+An agent task asks a named agent (e.g., `glitter`) to perform work based on your prompt. You create a task, then check its status or results, and you can list recent tasks for auditing.
 
-## Trigger a run
+Base URL: `https://tron.tera.space`
+
+Authentication: Send `Authorization: Bearer <AGENT_API_KEY>`.
+
+## Create a task
 
 <CodeGroup>
 
 ```bash cURL
-curl -X POST "$API_BASE/v1/consumer/agents/trigger" \
+curl -X POST "$API_BASE/v1/task/create" \
   -H "Authorization: Bearer $API_KEY" \
   -H "content-type: application/json" \
-  -d '{"agent":"glitter","prompt":"go to google","stepLimit":20}'
+  -d '{"agent":"glitter","prompt":"What does example.com's homepage say?","mode":"text","stepLimit":10}'
 ```
 
 ```python Python
@@ -25,12 +29,12 @@ API_BASE = os.getenv('API_BASE')
 API_KEY = os.getenv('API_KEY')
 
 resp = requests.post(
-    f"{API_BASE}/v1/consumer/agents/trigger",
+    f"{API_BASE}/v1/task/create",
     headers={
         "Authorization": f"Bearer {API_KEY}",
         "content-type": "application/json",
     },
-    json={"agent": "glitter", "prompt": "go to google", "stepLimit": 20},
+    json={"agent": "glitter", "prompt": "What does example.com's homepage say?", "mode": "text", "stepLimit": 10},
 )
 print(resp.json())
 ```
@@ -39,32 +43,32 @@ print(resp.json())
 const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
 
-const res = await fetch(`${API_BASE}/v1/consumer/agents/trigger`, {
+const res = await fetch(`${API_BASE}/v1/task/create`, {
   method: 'POST',
   headers: {
     Authorization: `Bearer ${API_KEY}`,
     'content-type': 'application/json',
   },
-  body: JSON.stringify({ agent: 'glitter', prompt: 'go to google', stepLimit: 20 }),
+  body: JSON.stringify({ agent: 'glitter', prompt: "What does example.com's homepage say?", mode: 'text', stepLimit: 10 }),
 });
 console.log(await res.json());
 ```
 
 </CodeGroup>
 
-Response (202):
+Example response (200):
 
 ```json
-{ "runId": "...", "cdpUrl": "wss://...", "taurineSessionId": "..." }
+{ "taskId": "02a94d68-b9e9-49bd-a3e4-54b8426e3550" }
 ```
 
-## Poll the run
+## Get a task
 
 <CodeGroup>
 
 ```bash cURL
 curl -H "Authorization: Bearer $API_KEY" \
-  "$API_BASE/v1/consumer/agents/runs/$RUN_ID"
+  "$API_BASE/v1/task/$TASK_ID"
 ```
 
 ```python Python
@@ -72,10 +76,10 @@ import os, requests
 
 API_BASE = os.getenv('API_BASE')
 API_KEY = os.getenv('API_KEY')
-RUN_ID = os.getenv('RUN_ID')
+TASK_ID = os.getenv('TASK_ID')
 
 resp = requests.get(
-    f"{API_BASE}/v1/consumer/agents/runs/{RUN_ID}",
+    f"{API_BASE}/v1/task/{TASK_ID}",
     headers={"Authorization": f"Bearer {API_KEY}"},
 )
 print(resp.json())
@@ -84,9 +88,9 @@ print(resp.json())
 ```typescript TypeScript
 const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
-const RUN_ID = process.env.RUN_ID!;
+const TASK_ID = process.env.TASK_ID!;
 
-const res = await fetch(`${API_BASE}/v1/consumer/agents/runs/${RUN_ID}`, {
+const res = await fetch(`${API_BASE}/v1/task/${TASK_ID}`, {
   headers: { Authorization: `Bearer ${API_KEY}` },
 });
 console.log(await res.json());
@@ -94,15 +98,15 @@ console.log(await res.json());
 
 </CodeGroup>
 
-Returns fields like `state`, `inputTokens`, `outputTokens`, and optional `result.answer`.
+Expect fields like `status` (queued, running, completed, failed) and, once completed, an optional `result` payload provided by the agent.
 
-## Stop the browser (optional)
+## List tasks
 
 <CodeGroup>
 
 ```bash cURL
-curl -X DELETE -H "Authorization: Bearer $API_KEY" \
-  "$API_BASE/v1/consumer/session?sessionId=$TAURINE_SESSION_ID"
+curl -H "Authorization: Bearer $API_KEY" \
+  "$API_BASE/v1/task/list?pageSize=20&page=1"
 ```
 
 ```python Python
@@ -110,26 +114,23 @@ import os, requests
 
 API_BASE = os.getenv('API_BASE')
 API_KEY = os.getenv('API_KEY')
-SESSION_ID = os.getenv('TAURINE_SESSION_ID')
 
-resp = requests.delete(
-    f"{API_BASE}/v1/consumer/session",
+resp = requests.get(
+    f"{API_BASE}/v1/task/list",
     headers={"Authorization": f"Bearer {API_KEY}"},
-    params={"sessionId": SESSION_ID},
+    params={"pageSize": 20, "page": 1},
 )
-print(resp.status_code)
+print(resp.json())
 ```
 
 ```typescript TypeScript
 const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
-const SESSION_ID = process.env.TAURINE_SESSION_ID!;
 
-const res = await fetch(`${API_BASE}/v1/consumer/session?sessionId=${SESSION_ID}`, {
-  method: 'DELETE',
+const res = await fetch(`${API_BASE}/v1/task/list?pageSize=20&page=1`, {
   headers: { Authorization: `Bearer ${API_KEY}` },
 });
-console.log(res.status);
+console.log(await res.json());
 ```
 
 </CodeGroup>
@@ -137,5 +138,5 @@ console.log(res.status);
 ## Notes
 
 - `stepLimit` caps how many autonomous steps the agent can take.
-- The `cdpUrl` lets you live‑view the run using CDP tooling.
-- Credits are debited after the run based on token usage. See [/account/billing](/account/billing).
+- Use pagination on list with `pageSize` and `page`.
+- Keep your API key secret. Prefer environment variables (e.g., PowerShell: `$env:API_BASE = "https://tron.tera.space"; $env:API_KEY = "<your key>"`).

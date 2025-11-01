@@ -1,6 +1,6 @@
 ﻿---
 title: "Overview"
-description: "Power your app with managed browsers (CDP) and autonomous agents."
+description: "Get started with our hosted browsers and browser agents."
 ---
 
 <Tabs>
@@ -8,8 +8,8 @@ description: "Power your app with managed browsers (CDP) and autonomous agents."
     <CodeGroup>
 
 ```bash cURL
-curl -X POST "$API_BASE/v1/consumer/session" \
-  -H "Authorization: Bearer $API_KEY" \
+curl -X POST "https://lisa-taurine.tera.space/v1/consumer/session" \
+  -H "Authorization: Bearer $BROWSER_API_KEY" \
   -H "content-type: application/json" \
   -d '{}'
 ```
@@ -18,37 +18,33 @@ curl -X POST "$API_BASE/v1/consumer/session" \
 import os
 import requests
 
-API_BASE = os.getenv("API_BASE")
-API_KEY = os.getenv("API_KEY")
+BROWSER_API_KEY = os.getenv("BROWSER_API_KEY")
 
 resp = requests.post(
-    API_BASE + "/v1/consumer/session",
+    "https://lisa-taurine.tera.space/v1/consumer/session",
     headers={
-        "Authorization": f"Bearer {API_KEY}",
+        "Authorization": f"Bearer {BROWSER_API_KEY}",
         "content-type": "application/json",
     },
     json={},
 )
 data = resp.json()
 print("sessionId:", data.get("sessionId"))
-print("cdpUrl:", data.get("cdpUrl"))
 ```
 
 ```typescript TypeScript
-const API_BASE = process.env.API_BASE!;
-const API_KEY = process.env.API_KEY!;
+const BROWSER_API_KEY = process.env.BROWSER_API_KEY!;
 
-const res = await fetch(API_BASE + "/v1/consumer/session", {
+const res = await fetch("https://lisa-taurine.tera.space/v1/consumer/session", {
   method: "POST",
   headers: {
-    Authorization: "Bearer " + API_KEY,
+    Authorization: `Bearer ${BROWSER_API_KEY}`,
     "content-type": "application/json",
   },
   body: JSON.stringify({}),
 });
 const data = await res.json();
 console.log("sessionId:", data.sessionId);
-console.log("cdpUrl:", data.cdpUrl);
 ```
 
     </CodeGroup>
@@ -59,10 +55,10 @@ console.log("cdpUrl:", data.cdpUrl);
     <CodeGroup>
 
 ```bash cURL
-curl -X POST "$API_BASE/v1/consumer/agents/trigger" \
+curl -X POST "$API_BASE/v1/task/create" \
   -H "Authorization: Bearer $API_KEY" \
   -H "content-type: application/json" \
-  -d '{"agent":"glitter","prompt":"go to google","stepLimit":20}'
+  -d '{"agent":"glitter","prompt":"What does example.com\'s homepage say?","mode":"text","stepLimit":10}'
 ```
 
 ```python Python
@@ -73,12 +69,12 @@ API_BASE = os.getenv("API_BASE")
 API_KEY = os.getenv("API_KEY")
 
 resp = requests.post(
-    API_BASE + "/v1/consumer/agents/trigger",
+    API_BASE + "/v1/task/create",
     headers={
         "Authorization": f"Bearer {API_KEY}",
         "content-type": "application/json",
     },
-    json={"agent": "glitter", "prompt": "go to google", "stepLimit": 20},
+    json={"agent": "glitter", "prompt": "What does example.com's homepage say?", "mode": "text", "stepLimit": 10},
 )
 print(resp.json())
 ```
@@ -87,13 +83,13 @@ print(resp.json())
 const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
 
-const res = await fetch(API_BASE + "/v1/consumer/agents/trigger", {
+const res = await fetch(API_BASE + "/v1/task/create", {
   method: "POST",
   headers: {
     Authorization: "Bearer " + API_KEY,
     "content-type": "application/json",
   },
-  body: JSON.stringify({ agent: "glitter", prompt: "go to google", stepLimit: 20 }),
+  body: JSON.stringify({ agent: "glitter", prompt: "What does example.com's homepage say?", mode: "text", stepLimit: 10 }),
 });
 console.log(await res.json());
 ```
@@ -102,81 +98,75 @@ console.log(await res.json());
 
   </Tab>
 
-  <Tab title="List / Stop Sessions">
+  <Tab title="Get / Stop Session">
     <CodeGroup>
 
 ```bash cURL
-# List sessions
-curl "$API_BASE/v1/consumer/session/list?page=1&pageSize=20" \
-  -H "Authorization: Bearer $API_KEY"
+# Get a session status
+curl "https://lisa-taurine.tera.space/v1/consumer/session?sessionId=$SESSION_ID" \
+  -H "Authorization: Bearer $BROWSER_API_KEY"
 
 # Stop a session
-curl -X DELETE "$API_BASE/v1/consumer/session?sessionId=$SESSION_ID" \
-  -H "Authorization: Bearer $API_KEY"
+curl -X DELETE "https://lisa-taurine.tera.space/v1/consumer/session?sessionId=$SESSION_ID" \
+  -H "Authorization: Bearer $BROWSER_API_KEY"
 ```
 
 ```python Python
 import os
 import requests
 
-API_BASE = os.getenv("API_BASE")
-API_KEY = os.getenv("API_KEY")
-
-# List sessions
-resp = requests.get(
-    API_BASE + "/v1/consumer/session/list?page=1&pageSize=20",
-    headers={"Authorization": f"Bearer {API_KEY}"},
-)
-print(resp.json())
-
-# Stop a session
+BROWSER_API_KEY = os.getenv("BROWSER_API_KEY")
+# Get a session status
 SESSION_ID = os.getenv("SESSION_ID")
 if SESSION_ID:
+    status = requests.get(
+        "https://lisa-taurine.tera.space/v1/consumer/session",
+        headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
+        params={"sessionId": SESSION_ID},
+    )
+    print(status.json())
+
+    # Stop a session
     stop = requests.delete(
-        API_BASE + "/v1/consumer/session",
-        headers={"Authorization": f"Bearer {API_KEY}"},
+        "https://lisa-taurine.tera.space/v1/consumer/session",
+        headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
         params={"sessionId": SESSION_ID},
     )
     print("stopped:", stop.status_code)
 ```
 
 ```typescript TypeScript
-const API_BASE = process.env.API_BASE!;
-const API_KEY = process.env.API_KEY!;
+const BROWSER_API_KEY = process.env.BROWSER_API_KEY!;
 
-// List sessions
-const list = await fetch(
-  API_BASE + "/v1/consumer/session/list?page=1&pageSize=20",
-  {
-    headers: { Authorization: "Bearer " + API_KEY },
-  }
+// Get a session status
+const SESSION_ID = process.env.SESSION_ID!;
+const status = await fetch(
+  `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
+  { headers: { Authorization: `Bearer ${BROWSER_API_KEY}` } }
 );
-console.log(await list.json());
+console.log(await status.json());
 
 // Stop a session
-const SESSION_ID = process.env.SESSION_ID;
-if (SESSION_ID) {
-  const stop = await fetch(
-    API_BASE + "/v1/consumer/session?sessionId=" + SESSION_ID,
-    {
-      method: "DELETE",
-      headers: { Authorization: "Bearer " + API_KEY },
-    }
-  );
-  console.log("stopped", stop.status);
-}
+const stop = await fetch(
+  `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
+  {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${BROWSER_API_KEY}` },
+  }
+);
+console.log("stopped", stop.status);
 ```
 
     </CodeGroup>
 
   </Tab>
 
-  <Tab title="Poll Agent Run">
+  <Tab title="Get Agent Task">
     <CodeGroup>
 
 ```bash cURL
 curl -H "Authorization: Bearer $API_KEY" \
-  "$API_BASE/v1/consumer/agents/runs/$RUN_ID"
+  "$API_BASE/v1/task/$TASK_ID"
 ```
 
 ```python Python
@@ -185,10 +175,10 @@ import requests
 
 API_BASE = os.getenv("API_BASE")
 API_KEY = os.getenv("API_KEY")
-RUN_ID = os.getenv("RUN_ID")
+TASK_ID = os.getenv("TASK_ID")
 
 resp = requests.get(
-    API_BASE + "/v1/consumer/agents/runs/" + str(RUN_ID),
+    API_BASE + "/v1/task/" + str(TASK_ID),
     headers={"Authorization": f"Bearer {API_KEY}"},
 )
 print(resp.json())
@@ -197,9 +187,9 @@ print(resp.json())
 ```typescript TypeScript
 const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
-const RUN_ID = process.env.RUN_ID!;
+const TASK_ID = process.env.TASK_ID!;
 
-const res = await fetch(API_BASE + "/v1/consumer/agents/runs/" + RUN_ID, {
+const res = await fetch(API_BASE + "/v1/task/" + TASK_ID, {
   headers: { Authorization: "Bearer " + API_KEY },
 });
 console.log(await res.json());
@@ -214,7 +204,7 @@ console.log(await res.json());
 
 <CardGroup cols={2}>
   <Card title="Browser API" href="/browser-api/quickstart" icon="browser">
-    Manage browsers with CDP (Chrome DevTools Protocol) for web automation,
+    Launch hosted browsers for web automation,
     scraping, and testing at scale.
   </Card>
   <Card title="Agent API" href="/agent-api/quickstart" icon="robot">

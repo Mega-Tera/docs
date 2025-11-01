@@ -25,13 +25,7 @@
                         "pages": [
                             "browser-api/quickstart",
                             "browser-api/using-quickconnect",
-                            {
-                                "group": "Guides",
-                                "pages": [
-                                    "browser-api/guides/cdp-playwright",
-                                    "browser-api/guides/cdp-dashboard"
-                                ]
-                            }
+                            "browser-api/using-session-api"
                         ]
                     },
                     {
