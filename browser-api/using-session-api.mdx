@@ -202,21 +202,6 @@ await fetch(`https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${enc
 
 </CodeGroup>
 
-## Using the Insomnia collection
-
-Prefer a GUI client? Import our Insomnia collection ("Lisa") to try the session endpoints quickly:
-
-1. Import the YAML collection into Insomnia
-2. Set the `Authorization: Bearer <BROWSER_API_KEY>` header
-3. Run "Create a session", copy the `sessionId`
-4. Use "Get a session" to watch the status change to `active`
-5. Use "Stop a session" to end it when you're done
-
-The collection includes exactly these calls:
-
-- POST `https://lisa-taurine.tera.space/v1/consumer/session`
-- GET/DELETE `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=<SESSION_ID>`
-
 ## Timeouts, retries, and tips
 
 - Session activation: allow up to ~20 seconds for the browser to boot on cold nodes
