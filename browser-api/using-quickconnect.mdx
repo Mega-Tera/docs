@@ -3,6 +3,22 @@ title: "Using Quickconnect"
 description: "Quickconnect makes getting started with our browsers easy without having to manage sessions."
 ---
 
+<script>
+  {(function(){
+    function fixLinks(){
+      var nodes=document.querySelectorAll('a[href^="/"]');
+      nodes.forEach(function(a){
+        var href=a.getAttribute('href')||'';
+        if(!href) return;
+        if(href.startsWith('/docs')) return;
+        if(href.startsWith('/_next')||href.startsWith('/mintlify-assets')||href.startsWith('/logo')||href.startsWith('/socket.io')) return;
+        a.setAttribute('href','/docs'+href);
+      });
+    }
+    if(document.readyState!=='loading') fixLinks();
+    else document.addEventListener('DOMContentLoaded',fixLinks);
+  })()}
+  </script>
 ## What is Quickconnect?
 
 Quickconnect allows you to automatically launch and connect to a browser session without interacting with our API. You can use your Quickconnect URL anywhere you would normally use a CDP URL.

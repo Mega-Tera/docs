@@ -4,6 +4,23 @@ description: "Get started with our hosted browsers and browser agents."
 ---
 
 <script defer src="/docs-prefill.js"></script>
+<script>
+  {(function(){
+    function fixLinks(){
+      var nodes=document.querySelectorAll('a[href^="/"]');
+      nodes.forEach(function(a){
+        var href=a.getAttribute('href')||'';
+        if(!href) return;
+        if(href.startsWith('/docs')) return;
+        // Skip framework/runtime paths
+        if(href.startsWith('/_next')||href.startsWith('/mintlify-assets')||href.startsWith('/logo')||href.startsWith('/socket.io')) return;
+        a.setAttribute('href','/docs'+href);
+      });
+    }
+    if(document.readyState!=='loading') fixLinks();
+    else document.addEventListener('DOMContentLoaded',fixLinks);
+  })()}
+  </script>
 
 <Tabs>
   <Tab title="Start Browser Session">
@@ -53,28 +70,16 @@ console.log("sessionId:", data.sessionId);
 
     <style>
       {`
-        .run-status:empty { display: none }
-        .run-response { display: none }
-        .run-response:has(.run-output:not(:empty)) { display: block }
-        /* Light = lighter surfaces + dark text; Dark = darker surfaces + light text */
-        :root, [data-theme='light'] { --run-fg:#111111; --run-muted:#6b7280; --run-bg:#f7f7f7; --run-border:#e5e7eb }
-        [data-theme='dark'] { --run-fg:#e5e7eb; --run-muted:#9ca3af; --run-bg:#1f2937; --run-border:#374151 }
-        .run-btn{ color:var(--run-fg); background:var(--run-bg); border:1px solid var(--run-border); padding:6px 10px; border-radius:4px; cursor:pointer }
-        .run-input{ color:var(--run-fg); background:transparent; border:1px solid var(--run-border); padding:6px 8px; border-radius:4px }
-        .run-status{ color:var(--run-muted); font-size:12px; margin-left:10px }
-        .run-output{ background:transparent; border:none; box-shadow:none }
-        .run-icon{ position:absolute; top:8px; right:44px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; border-radius:9999px; background:var(--run-bg); border:1px solid var(--run-border); color:var(--run-fg); cursor:pointer; z-index:2 }
-        .run-inline{ width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; border-radius:9999px; background:var(--run-bg); border:1px solid var(--run-border); color:var(--run-fg); cursor:pointer; margin-right:8px }
       `}
     </style>
-    <div className="run-request" style={{ marginTop: '12px', position: 'relative' }}>
-      <button className="run-request-btn run-icon" data-url="https://lisa-taurine.tera.space/v1/consumer/session" data-method="POST" data-body="{}" aria-label="Run">▶</button>
+    <div className="run-request" style={{ marginTop: '5px', position: 'relative' }}>
+      <button className="run-request-btn run-icon" data-url="https://lisa-taurine.tera.space/v1/consumer/session" data-method="POST" data-body="{}" aria-label="Run">▶️  Run</button>
       <span className="run-status"></span>
       <div className="run-response">
-        <pre
+        <div
           className="run-output"
-          style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto' }}
-        ></pre>
+          style={{ marginTop: '0px', maxHeight: '260px', overflow: 'auto', marginBottom: '8px'}}
+        ></div>
       </div>
     </div>
 
@@ -118,7 +123,12 @@ const res = await fetch(API_BASE + "/v1/task/create", {
     Authorization: "Bearer " + API_KEY,
     "content-type": "application/json",
   },
-  body: JSON.stringify({ agent: "glitter", prompt: "What does example.com's homepage say?", mode: "text", stepLimit: 10 }),
+  body: JSON.stringify({
+    agent: "glitter",
+    prompt: "What does example.com's homepage say?",
+    mode: "text",
+    stepLimit: 10,
+  }),
 });
 console.log(await res.json());
 ```
@@ -134,9 +144,10 @@ console.log(await res.json());
         Run this request
       </button>
       <span className="run-status"></span>
-      <div className="run-response">
-        <pre className="run-output" style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto' }}></pre>
-      </div>
+     <div
+          className="run-output"
+          style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto', marginBottom: '8px'}}
+        ></div>
     </div>
 
   </Tab>
@@ -184,14 +195,18 @@ const BROWSER_API_KEY = process.env.BROWSER_API_KEY!;
 // Get a session status
 const SESSION_ID = process.env.SESSION_ID!;
 const status = await fetch(
-  `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
+  `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(
+    SESSION_ID
+  )}`,
   { headers: { Authorization: `Bearer ${BROWSER_API_KEY}` } }
 );
 console.log(await status.json());
 
 // Stop a session
 const stop = await fetch(
-  `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
+  `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(
+    SESSION_ID
+  )}`,
   {
     method: "DELETE",
     headers: { Authorization: `Bearer ${BROWSER_API_KEY}` },
@@ -290,12 +305,11 @@ console.log(await res.json());
   </Tab>
 </Tabs>
 
-<h2 style={{ marginTop: '8px' }}>Products</h2>
+<h2 style={{ marginTop: "8px" }}>Products</h2>
 
 <CardGroup cols={2}>
   <Card title="Browser API" href="/browser-api/quickstart" icon="browser">
-    Launch hosted browsers for web automation,
-    scraping, and testing at scale.
+    Launch hosted browsers for web automation, scraping, and testing at scale.
   </Card>
   <Card title="Agent API" href="/agent-api/quickstart" icon="robot">
     Deploy autonomous agents that can browse the web, interact with pages, and
