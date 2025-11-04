@@ -68,7 +68,7 @@
         "primary": {
             "type": "button",
             "label": "Dashboard",
-            "href": "http://localhost:3000"
+            "href": "/dashboard"
         }
     },
     "contextual": {
