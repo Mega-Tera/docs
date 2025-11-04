@@ -2,6 +2,7 @@
     "$schema": "https://mintlify.com/docs.json",
     "theme": "mint",
     "name": "Mega Tera Corp",
+    "openapi": "openapi.yaml",
     "colors": {
         "primary": "#F0B15C",
         "light": "#FFD38A",
@@ -67,7 +68,7 @@
         "primary": {
             "type": "button",
             "label": "Dashboard",
-            "href": "https://bc-dashboard.alex-13e.workers.dev"
+            "href": "http://localhost:3000"
         }
     },
     "contextual": {

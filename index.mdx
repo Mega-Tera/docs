@@ -1,4 +1,5 @@
-﻿---
+﻿
+---
 title: "Overview"
 description: "Get started with our hosted browsers and browser agents."
 ---
@@ -51,13 +52,40 @@ console.log("sessionId:", data.sessionId);
 
     </CodeGroup>
 
+    <style>
+      {`
+        .run-status:empty { display: none }
+        .run-response { display: none }
+        .run-response:has(.run-output:not(:empty)) { display: block }
+        /* Light = lighter surfaces + dark text; Dark = darker surfaces + light text */
+        :root, [data-theme='light'] { --run-fg:#111111; --run-muted:#6b7280; --run-bg:#f7f7f7; --run-border:#e5e7eb }
+        [data-theme='dark'] { --run-fg:#e5e7eb; --run-muted:#9ca3af; --run-bg:#1f2937; --run-border:#374151 }
+        .run-btn{ color:var(--run-fg); background:var(--run-bg); border:1px solid var(--run-border); padding:6px 10px; border-radius:4px; cursor:pointer }
+        .run-input{ color:var(--run-fg); background:transparent; border:1px solid var(--run-border); padding:6px 8px; border-radius:4px }
+        .run-status{ color:var(--run-muted); font-size:12px; margin-left:10px }
+        .run-output{ background:transparent; border:none; box-shadow:none }
+        .run-icon{ position:absolute; top:8px; right:44px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; border-radius:9999px; background:var(--run-bg); border:1px solid var(--run-border); color:var(--run-fg); cursor:pointer; z-index:2 }
+        .run-inline{ width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; border-radius:9999px; background:var(--run-bg); border:1px solid var(--run-border); color:var(--run-fg); cursor:pointer; margin-right:8px }
+      `}
+    </style>
+    <div className="run-request" style={{ marginTop: '12px', position: 'relative' }}>
+      <button className="run-request-btn run-icon" data-url="https://lisa-taurine.tera.space/v1/consumer/session" data-method="POST" data-body="{}" aria-label="Run">▶</button>
+      <span className="run-status"></span>
+      <div className="run-response">
+        <pre
+          className="run-output"
+          style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto' }}
+        ></pre>
+      </div>
+    </div>
+
   </Tab>
 
   <Tab title="Trigger Agent Task">
     <CodeGroup>
 
 ```bash cURL
-curl -X POST "$API_BASE/v1/task/create" \
+curl -X POST "https://tron.tera.space/v1/task/create" \
   -H "Authorization: Bearer $API_KEY" \
   -H "content-type: application/json" \
   -d '{"agent":"glitter","prompt":"What does example.com\'s homepage say?","mode":"text","stepLimit":10}'
@@ -97,6 +125,20 @@ console.log(await res.json());
 ```
 
     </CodeGroup>
+
+    <div className="run-request" style={{ marginTop: '12px', position: 'relative' }}>
+      <button className="run-request-btn run-icon"
+        data-url="https://tron.tera.space/v1/task/create"
+        data-method="POST"
+        data-body={`{"agent":"glitter","prompt":"What does example.com\u0027s homepage say?","mode":"text","stepLimit":10}`}
+      >
+        Run this request
+      </button>
+      <span className="run-status"></span>
+      <div className="run-response">
+        <pre className="run-output" style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto' }}></pre>
+      </div>
+    </div>
 
   </Tab>
 
@@ -161,6 +203,36 @@ console.log("stopped", stop.status);
 
     </CodeGroup>
 
+    <div style={{ marginTop: '12px' }}>
+      <input id="session-id-input" className="run-input" placeholder="sessionId" style={{ width: '260px' }} />
+    </div>
+    <div className="run-request" style={{ marginTop: '8px', position: 'relative' }}>
+      <button className="run-request-btn run-icon"
+        data-url="https://lisa-taurine.tera.space/v1/consumer/session?sessionId={sessionId}"
+        data-method="GET"
+        data-vars='{"sessionId":"#session-id-input"}'
+        style={{ background: '#222', color: '#fff', border: '1px solid #444', padding: '6px 10px', borderRadius: '4px', cursor: 'pointer' }}>
+        Get session
+      </button>
+      <span className="run-status"></span>
+      <div className="run-response">
+        <pre className="run-output" style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto' }}></pre>
+      </div>
+    </div>
+    <div className="run-request" style={{ marginTop: '8px', position: 'relative' }}>
+      <button className="run-request-btn run-icon"
+        data-url="https://lisa-taurine.tera.space/v1/consumer/session?sessionId={sessionId}"
+        data-method="DELETE"
+        data-vars='{"sessionId":"#session-id-input"}'
+        style={{ background: '#222', color: '#fff', border: '1px solid #444', padding: '6px 10px', borderRadius: '4px', cursor: 'pointer' }}>
+        Stop session
+      </button>
+      <span className="run-status"></span>
+      <div className="run-response">
+        <pre className="run-output" style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto' }}></pre>
+      </div>
+    </div>
+
   </Tab>
 
   <Tab title="Get Agent Task">
@@ -168,7 +240,7 @@ console.log("stopped", stop.status);
 
 ```bash cURL
 curl -H "Authorization: Bearer $API_KEY" \
-  "$API_BASE/v1/task/$TASK_ID"
+  "https://tron.tera.space/v1/task/$TASK_ID"
 ```
 
 ```python Python
@@ -199,6 +271,23 @@ console.log(await res.json());
 
     </CodeGroup>
 
+    <div style={{ marginTop: '12px' }}>
+      <input id="task-id-input" className="run-input" placeholder="taskId" style={{ width: '260px' }} />
+    </div>
+    <div className="run-request" style={{ marginTop: '8px', position: 'relative' }}>
+      <button className="run-request-btn run-btn"
+        data-url="https://tron.tera.space/v1/task/{taskId}"
+        data-method="GET"
+        data-vars='{"taskId":"#task-id-input"}'
+        style={{ background: '#222', color: '#fff', border: '1px solid #444', padding: '6px 10px', borderRadius: '4px', cursor: 'pointer' }}>
+        Get task
+      </button>
+      <span className="run-status"></span>
+      <div className="run-response">
+        <pre className="run-output" style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto' }}></pre>
+      </div>
+    </div>
+
   </Tab>
 </Tabs>
 
@@ -214,3 +303,4 @@ console.log(await res.json());
     complete complex tasks.
   </Card>
 </CardGroup>
+

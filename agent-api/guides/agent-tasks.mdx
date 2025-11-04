@@ -16,7 +16,7 @@ Authentication: Send `Authorization: Bearer <AGENT_API_KEY>`.
 <CodeGroup>
 
 ```bash cURL
-curl -X POST "$API_BASE/v1/task/create" \
+curl -X POST "https://tron.tera.space/v1/task/create" \
   -H "Authorization: Bearer $API_KEY" \
   -H "content-type: application/json" \
   -d '{"agent":"glitter","prompt":"What does example.com's homepage say?","mode":"text","stepLimit":10}'
@@ -68,7 +68,7 @@ Example response (200):
 
 ```bash cURL
 curl -H "Authorization: Bearer $API_KEY" \
-  "$API_BASE/v1/task/$TASK_ID"
+  "https://tron.tera.space/v1/task/$TASK_ID"
 ```
 
 ```python Python
@@ -106,7 +106,7 @@ Expect fields like `status` (queued, running, completed, failed) and, once compl
 
 ```bash cURL
 curl -H "Authorization: Bearer $API_KEY" \
-  "$API_BASE/v1/task/list?pageSize=20&page=1"
+  "https://tron.tera.space/v1/task/list?pageSize=20&page=1"
 ```
 
 ```python Python
