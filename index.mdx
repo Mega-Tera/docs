@@ -72,13 +72,27 @@ console.log("sessionId:", data.sessionId);
       {`
       `}
     </style>
-    <div className="run-request" style={{ marginTop: '5px', position: 'relative' }}>
-      <button className="run-request-btn run-icon" data-url="https://lisa-taurine.tera.space/v1/consumer/session" data-method="POST" data-body="{}" aria-label="Run">▶️  Run</button>
+    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+      <button
+        className="run-request-btn run-icon"
+        data-url="https://lisa-taurine.tera.space/v1/consumer/session"
+        data-method="POST"
+        data-body="{}"
+        aria-label="Test Request"
+        style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+      >
+        <svg className="run-icon-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg className="run-spinner" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ display: 'none' }}>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"></circle>
+          <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" opacity="0.75"></path>
+        </svg>
+        Test Request
+      </button>
       <span className="run-status"></span>
       <div className="run-response">
         <div
           className="run-output"
-          style={{ marginTop: '0px', maxHeight: '260px', overflow: 'auto', marginBottom: '8px'}}
+          style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto', marginBottom: '6px'}}
         ></div>
       </div>
     </div>
@@ -135,31 +149,108 @@ console.log(await res.json());
 
     </CodeGroup>
 
-    <div className="run-request" style={{ marginTop: '12px', position: 'relative' }}>
-      <button className="run-request-btn run-icon"
+    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+      <button
+        className="run-request-btn run-icon"
         data-url="https://tron.tera.space/v1/task/create"
         data-method="POST"
         data-body={`{"agent":"glitter","prompt":"What does example.com\u0027s homepage say?","mode":"text","stepLimit":10}`}
+        style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
       >
-        Run this request
+        <svg className="run-icon-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg className="run-spinner" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ display: 'none' }}>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"></circle>
+          <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" opacity="0.75"></path>
+        </svg>
+        Test Request
       </button>
       <span className="run-status"></span>
      <div
           className="run-output"
-          style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto', marginBottom: '8px'}}
-        ></div>
+          style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto', marginBottom: '6px'}}
+          ></div>
     </div>
 
   </Tab>
 
-  <Tab title="Get / Stop Session">
+  <Tab title="Get Session">
     <CodeGroup>
 
 ```bash cURL
 # Get a session status
 curl "https://lisa-taurine.tera.space/v1/consumer/session?sessionId=$SESSION_ID" \
   -H "Authorization: Bearer $BROWSER_API_KEY"
+```
 
+```python Python
+import os
+import requests
+
+BROWSER_API_KEY = os.getenv("BROWSER_API_KEY")
+SESSION_ID = os.getenv("SESSION_ID")
+
+resp = requests.get(
+    "https://lisa-taurine.tera.space/v1/consumer/session",
+    headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
+    params={"sessionId": SESSION_ID},
+)
+print(resp.json())
+```
+
+```typescript TypeScript
+const BROWSER_API_KEY = process.env.BROWSER_API_KEY!;
+const SESSION_ID = process.env.SESSION_ID!;
+
+const res = await fetch(
+  `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
+  { headers: { Authorization: `Bearer ${BROWSER_API_KEY}` } }
+);
+console.log(await res.json());
+```
+
+    </CodeGroup>
+
+    <div style={{ marginTop: '10px', marginBottom: '12px' }}>
+      <input
+        id="session-id-input-get"
+        className="run-input"
+        placeholder="sessionId"
+        style={{
+          width: '260px',
+          background: 'transparent',
+          color: 'inherit',
+          border: '1px solid #ddd',
+          padding: '6px 12px',
+          borderRadius: '9999px',
+          outline: 'none',
+        }}
+      />
+    </div>
+    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+      <button
+        className="run-request-btn run-icon"
+        data-url="https://lisa-taurine.tera.space/v1/consumer/session?sessionId={sessionId}"
+        data-method="GET"
+        data-vars='{"sessionId":"#session-id-input-get"}'
+        style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+      >
+        <svg className="run-icon-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg className="run-spinner" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ display: 'none' }}>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"></circle>
+          <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" opacity="0.75"></path>
+        </svg>
+        Test Request
+      </button>
+      <span className="run-status"></span>
+      <div className="run-output" style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto' }}></div>
+    </div>
+
+  </Tab>
+
+  <Tab title="Stop Session">
+    <CodeGroup>
+
+```bash cURL
 # Stop a session
 curl -X DELETE "https://lisa-taurine.tera.space/v1/consumer/session?sessionId=$SESSION_ID" \
   -H "Authorization: Bearer $BROWSER_API_KEY"
@@ -170,81 +261,62 @@ import os
 import requests
 
 BROWSER_API_KEY = os.getenv("BROWSER_API_KEY")
-# Get a session status
 SESSION_ID = os.getenv("SESSION_ID")
-if SESSION_ID:
-    status = requests.get(
-        "https://lisa-taurine.tera.space/v1/consumer/session",
-        headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
-        params={"sessionId": SESSION_ID},
-    )
-    print(status.json())
 
-    # Stop a session
-    stop = requests.delete(
-        "https://lisa-taurine.tera.space/v1/consumer/session",
-        headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
-        params={"sessionId": SESSION_ID},
-    )
-    print("stopped:", stop.status_code)
+resp = requests.delete(
+    "https://lisa-taurine.tera.space/v1/consumer/session",
+    headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
+    params={"sessionId": SESSION_ID},
+)
+print("stopped:", resp.status_code)
 ```
 
 ```typescript TypeScript
 const BROWSER_API_KEY = process.env.BROWSER_API_KEY!;
-
-// Get a session status
 const SESSION_ID = process.env.SESSION_ID!;
-const status = await fetch(
-  `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(
-    SESSION_ID
-  )}`,
-  { headers: { Authorization: `Bearer ${BROWSER_API_KEY}` } }
-);
-console.log(await status.json());
 
-// Stop a session
-const stop = await fetch(
-  `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(
-    SESSION_ID
-  )}`,
-  {
-    method: "DELETE",
-    headers: { Authorization: `Bearer ${BROWSER_API_KEY}` },
-  }
+const res = await fetch(
+  `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
+  { method: "DELETE", headers: { Authorization: `Bearer ${BROWSER_API_KEY}` } }
 );
-console.log("stopped", stop.status);
+console.log("stopped", res.status);
 ```
 
     </CodeGroup>
 
-    <div style={{ marginTop: '12px' }}>
-      <input id="session-id-input" className="run-input" placeholder="sessionId" style={{ width: '260px' }} />
+    <div style={{ marginTop: '10px', marginBottom: '12px' }}>
+      <input
+        id="session-id-input-stop"
+        className="run-input"
+        placeholder="sessionId"
+        style={{
+          width: '260px',
+          background: 'transparent',
+          color: 'inherit',
+          border: '1px solid #ddd',
+          padding: '6px 12px',
+          borderRadius: '9999px',
+          outline: 'none',
+        }}
+      />
     </div>
-    <div className="run-request" style={{ marginTop: '8px', position: 'relative' }}>
-      <button className="run-request-btn run-icon"
-        data-url="https://lisa-taurine.tera.space/v1/consumer/session?sessionId={sessionId}"
-        data-method="GET"
-        data-vars='{"sessionId":"#session-id-input"}'
-        style={{ background: '#222', color: '#fff', border: '1px solid #444', padding: '6px 10px', borderRadius: '4px', cursor: 'pointer' }}>
-        Get session
-      </button>
-      <span className="run-status"></span>
-      <div className="run-response">
-        <pre className="run-output" style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto' }}></pre>
-      </div>
-    </div>
-    <div className="run-request" style={{ marginTop: '8px', position: 'relative' }}>
-      <button className="run-request-btn run-icon"
+    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+      <button
+        className="run-request-btn run-icon"
         data-url="https://lisa-taurine.tera.space/v1/consumer/session?sessionId={sessionId}"
         data-method="DELETE"
-        data-vars='{"sessionId":"#session-id-input"}'
-        style={{ background: '#222', color: '#fff', border: '1px solid #444', padding: '6px 10px', borderRadius: '4px', cursor: 'pointer' }}>
-        Stop session
+        data-vars='{"sessionId":"#session-id-input-stop"}'
+        style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+      >
+        <svg className="run-icon-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg className="run-spinner" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ display: 'none' }}>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"></circle>
+          <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" opacity="0.75"></path>
+        </svg>
+        Test Request
       </button>
       <span className="run-status"></span>
-      <div className="run-response">
-        <pre className="run-output" style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto' }}></pre>
-      </div>
+      <div className="run-output" style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto' }}></div>
     </div>
 
   </Tab>
@@ -285,21 +357,39 @@ console.log(await res.json());
 
     </CodeGroup>
 
-    <div style={{ marginTop: '12px' }}>
-      <input id="task-id-input" className="run-input" placeholder="taskId" style={{ width: '260px' }} />
+    <div style={{ marginTop: '10px', marginBottom: '12px' }}>
+      <input
+        id="task-id-input"
+        className="run-input"
+        placeholder="taskId"
+        style={{
+          width: '260px',
+          background: 'transparent',
+          color: 'inherit',
+          border: '1px solid #ddd',
+          padding: '6px 12px',
+          borderRadius: '9999px',
+          outline: 'none',
+        }}
+      />
     </div>
-    <div className="run-request" style={{ marginTop: '8px', position: 'relative' }}>
-      <button className="run-request-btn run-btn"
+    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+      <button
+        className="run-request-btn run-btn"
         data-url="https://tron.tera.space/v1/task/{taskId}"
         data-method="GET"
         data-vars='{"taskId":"#task-id-input"}'
-        style={{ background: '#222', color: '#fff', border: '1px solid #444', padding: '6px 10px', borderRadius: '4px', cursor: 'pointer' }}>
-        Get task
+        style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+      >
+        <svg className="run-icon-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg className="run-spinner" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ display: 'none' }}>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"></circle>
+          <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" opacity="0.75"></path>
+        </svg>
+        Test Request
       </button>
       <span className="run-status"></span>
-      <div className="run-response">
-        <pre className="run-output" style={{ marginTop: '8px', maxHeight: '260px', overflow: 'auto' }}></pre>
-      </div>
+      <div className="run-output" style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto' }}></div>
     </div>
 
   </Tab>
