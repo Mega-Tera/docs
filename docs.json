@@ -33,6 +33,7 @@
                         "group": "Agent API",
                         "pages": [
                             "/docs/agent-api/quickstart",
+                            "/docs/agent-api/agents",
                             {
                                 "group": "Guides",
                                 "pages": [
