@@ -23,7 +23,7 @@ description: "Create, fetch, and list tasks with the Agent API"
 
 An agent task asks a named agent (e.g., `gemini`) to perform work based on your prompt. You create a task, then check its status or results, and you can list recent tasks for auditing.
 
-Base URL: `https://tron.tera.space`
+Base URL: `https://agent-api.browser.cash`
 
 Authentication: Send `Authorization: Bearer <AGENT_API_KEY>`.
 
@@ -32,7 +32,7 @@ Authentication: Send `Authorization: Bearer <AGENT_API_KEY>`.
 <CodeGroup>
 
 ```bash cURL
-curl -X POST "https://tron.tera.space/v1/task/create" \
+curl -X POST "https://agent-api.browser.cash/v1/task/create" \
   -H "Authorization: Bearer $API_KEY" \
   -H "content-type: application/json" \
   -d '{"agent":"gemini","prompt":"What does example.com's homepage say?","mode":"text","stepLimit":10}'
@@ -84,7 +84,7 @@ Example response (200):
 
 ```bash cURL
 curl -H "Authorization: Bearer $API_KEY" \
-  "https://tron.tera.space/v1/task/$TASK_ID"
+  "https://agent-api.browser.cash/v1/task/$TASK_ID"
 ```
 
 ```python Python
@@ -122,7 +122,7 @@ Expect fields like `status` (queued, running, completed, failed) and, once compl
 
 ```bash cURL
 curl -H "Authorization: Bearer $API_KEY" \
-  "https://tron.tera.space/v1/task/list?pageSize=20&page=1"
+  "https://agent-api.browser.cash/v1/task/list?pageSize=20&page=1"
 ```
 
 ```python Python
@@ -155,4 +155,4 @@ console.log(await res.json());
 
 - `stepLimit` caps how many autonomous steps the agent can take.
 - Use pagination on list with `pageSize` and `page`.
-- Keep your API key secret. Prefer environment variables (e.g., PowerShell: `$env:API_BASE = "https://tron.tera.space"; $env:API_KEY = "<your key>"`).
+- Keep your API key secret. Prefer environment variables (e.g., PowerShell: `$env:API_BASE = "https://agent-api.browser.cash"; $env:API_KEY = "<your key>"`).

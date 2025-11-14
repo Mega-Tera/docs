@@ -134,12 +134,12 @@ You can call the REST endpoints directly if you prefer no SDK.
 curl -s -X POST \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $BROWSER_API_KEY" \
-  https://lisa-taurine.tera.space/v1/consumer/session \
+  https://browser-api.browser.cash/v1/consumer/session \
   -d '{}'
 ```
 
 ```typescript fetch (Node/Browser)
-const res = await fetch('https://lisa-taurine.tera.space/v1/consumer/session', {
+const res = await fetch('https://browser-api.browser.cash/v1/consumer/session', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ const sessionId = data.sessionId
 ```typescript
 async function waitForActive(sessionId: string, apiKey: string, timeoutMs = 20_000) {
   const start = Date.now()
-  const url = `https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(sessionId)}`
+  const url = `https://browser-api.browser.cash/v1/consumer/session?sessionId=${encodeURIComponent(sessionId)}`
   while (true) {
     const res = await fetch(url, { headers: { Authorization: `Bearer ${apiKey}` } })
     const json = await res.json()
@@ -206,11 +206,11 @@ curl -X PUT \
 ```bash curl
 curl -X DELETE \
   -H "Authorization: Bearer $BROWSER_API_KEY" \
-  "https://lisa-taurine.tera.space/v1/consumer/session?sessionId=<SESSION_ID>"
+  "https://browser-api.browser.cash/v1/consumer/session?sessionId=<SESSION_ID>"
 ```
 
 ```typescript fetch
-await fetch(`https://lisa-taurine.tera.space/v1/consumer/session?sessionId=${encodeURIComponent(sessionId)}`, {
+await fetch(`https://browser-api.browser.cash/v1/consumer/session?sessionId=${encodeURIComponent(sessionId)}`, {
   method: 'DELETE',
   headers: { Authorization: `Bearer ${process.env.BROWSER_API_KEY}` },
 })
