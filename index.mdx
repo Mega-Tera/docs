@@ -1,4 +1,4 @@
----
+﻿---
 title: "Overview"
 description: "Get started with our hosted browsers and browser agents."
 ---
@@ -106,7 +106,7 @@ console.log("sessionId:", data.sessionId);
 curl -X POST "https://agent-api.browser.cash/v1/task/create" \
   -H "Authorization: Bearer $API_KEY" \
   -H "content-type: application/json" \
-  -d '{"agent":"gemini","prompt":"What does example.com\'s homepage say?","mode":"text","stepLimit":10}'
+  -d '{"agent":"gemini","prompt":"What does example.com's homepage say?","mode":"text","stepLimit":10}'
 ```
 
 ```python Python
@@ -154,7 +154,7 @@ console.log(await res.json());
         className="run-request-btn run-icon"
         data-url="https://agent-api.browser.cash/v1/task/create"
         data-method="POST"
-        data-body={`{"agent":"gemini","prompt":"What does example.com\u0027s homepage say?","mode":"text","stepLimit":10}`}
+        data-body={`{"agent":"gemini","prompt":"What does example.com's homepage say?","mode":"text","stepLimit":10}`}
         style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
       >
         <svg className="run-icon-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
