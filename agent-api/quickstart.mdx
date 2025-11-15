@@ -39,7 +39,7 @@ You can optionally set environment variables in your shell:
 curl -X POST "https://agent-api.browser.cash/v1/task/create" \
   -H "Authorization: Bearer $API_KEY" \
   -H "content-type: application/json" \
-  -d '{"agent":"gemini","prompt":"What does example.com's homepage say?","mode":"text","stepLimit":10}'
+  -d '{"agent":"gemini","prompt":"What does example.com homepage say?","mode":"text","stepLimit":10}'
 ```
 
 ```python Python
@@ -54,7 +54,7 @@ resp = requests.post(
         "Authorization": f"Bearer {API_KEY}",
         "content-type": "application/json",
     },
-    json={"agent": "gemini", "prompt": "What does example.com's homepage say?", "mode": "text", "stepLimit": 10},
+    json={"agent": "gemini", "prompt": "What does example.com homepage say?", "mode": "text", "stepLimit": 10},
 )
 print(resp.json())
 ```
@@ -69,7 +69,7 @@ const res = await fetch(`${API_BASE}/v1/task/create`, {
     Authorization: `Bearer ${API_KEY}`,
     'content-type': 'application/json',
   },
-  body: JSON.stringify({ agent: 'gemini', prompt: "What does example.com's homepage say?", mode: 'text', stepLimit: 10 }),
+  body: JSON.stringify({ agent: 'gemini', prompt: "What does example.com homepage say?", mode: 'text', stepLimit: 10 }),
 });
 console.log(await res.json());
 ```
