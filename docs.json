@@ -69,7 +69,7 @@
         "primary": {
             "type": "button",
             "label": "Dashboard",
-            "href": "http://localhost:3000/dashboard"
+            "href": "https://dash.browser.cash"
         }
     },
     "contextual": {
