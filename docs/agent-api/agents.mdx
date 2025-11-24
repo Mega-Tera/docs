@@ -3,22 +3,6 @@ title: "Available Agents"
 description: "Overview of AI agents available through the Agent API"
 ---
 
-<script>
-  {(function(){
-    function fixLinks(){
-      var nodes=document.querySelectorAll('a[href^="/"]');
-      nodes.forEach(function(a){
-        var href=a.getAttribute('href')||'';
-        if(!href) return;
-        if(href.startsWith('/docs')) return;
-        if(href.startsWith('/_next')||href.startsWith('/mintlify-assets')||href.startsWith('/logo')||href.startsWith('/socket.io')) return;
-        a.setAttribute('href','/docs'+href);
-      });
-    }
-    if(document.readyState!=='loading') fixLinks();
-    else document.addEventListener('DOMContentLoaded',fixLinks);
-  })()}
-</script>
 
 The Agent API supports multiple AI agents optimized for different use cases. Each agent has distinct performance characteristics and intelligence levels.
 

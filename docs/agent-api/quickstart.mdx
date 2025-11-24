@@ -3,22 +3,7 @@ title: "Quickstart"
 description: "Create an agent task and fetch results"
 ---
 
-<script>
-  {(function(){
-    function fixLinks(){
-      var nodes=document.querySelectorAll('a[href^="/"]');
-      nodes.forEach(function(a){
-        var href=a.getAttribute('href')||'';
-        if(!href) return;
-        if(href.startsWith('/docs')) return;
-        if(href.startsWith('/_next')||href.startsWith('/mintlify-assets')||href.startsWith('/logo')||href.startsWith('/socket.io')) return;
-        a.setAttribute('href','/docs'+href);
-      });
-    }
-    if(document.readyState!=='loading') fixLinks();
-    else document.addEventListener('DOMContentLoaded',fixLinks);
-  })()}
-  </script>
+
 ## Get an API key
 
 - Copy your Agent API key from the <a href="https://dash.browser.cash/overview">dashboard</a>.
