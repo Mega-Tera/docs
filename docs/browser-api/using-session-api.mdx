@@ -112,13 +112,13 @@ run().catch(console.error)
 
 The SDK you downloaded includes convenience methods you might find useful:
 
-- `createSession(targeting?: object)` — POST /v1/consumer/session and wait until active (up to ~20s)
-- `getSessionStatus()` — GET /v1/consumer/session?sessionId=...
+- `createSession(targeting?: object)` — POST /v1/browser/session and wait until active (up to ~20s)
+- `getSessionStatus()` — GET /v1/browser/session?sessionId=...
 - `getBrowserCDPUrl()` — Resolve a CDP URL suitable for Playwright/Puppeteer
 - `getBrowserInfo()` — GET /json/version raw fields from the remote browser
 - `createPage(url?: string)` — Open a new tab/target (default `about:blank`)
 - `closePage(targetId: string)` — Close a tab/target
-- `endSession()` — DELETE /v1/consumer/session?sessionId=...
+- `endSession()` — DELETE /v1/browser/session?sessionId=...
 
 Use these primitives to structure multi-step flows (navigate, extract, upload, etc.).
 
@@ -134,12 +134,12 @@ You can call the REST endpoints directly if you prefer no SDK.
 curl -s -X POST \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $BROWSER_API_KEY" \
-  https://browser-api.browser.cash/v1/consumer/session \
+  https://api.browser.cash/v1/browser/session \
   -d '{}'
 ```
 
 ```typescript fetch (Node/Browser)
-const res = await fetch('https://browser-api.browser.cash/v1/consumer/session', {
+const res = await fetch('https://api.browser.cash/v1/browser/session', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -158,11 +158,11 @@ const sessionId = data.sessionId
 ```typescript
 async function waitForActive(sessionId: string, apiKey: string, timeoutMs = 20_000) {
   const start = Date.now()
-  const url = `https://browser-api.browser.cash/v1/consumer/session?sessionId=${encodeURIComponent(sessionId)}`
+  const url = `https://api.browser.cash/v1/browser/session?sessionId=${encodeURIComponent(sessionId)}`
   while (true) {
     const res = await fetch(url, { headers: { Authorization: `Bearer ${apiKey}` } })
     const json = await res.json()
-    if (json?.session?.status === 'active') return json.session
+    if (json?.status === 'active') return json
     if (Date.now() - start > timeoutMs) throw new Error('Timed out waiting for active session')
     await new Promise(r => setTimeout(r, 1000))
   }
@@ -171,32 +171,25 @@ async function waitForActive(sessionId: string, apiKey: string, timeoutMs = 20_0
 
 ### 3) Get a CDP URL
 
-Once the session is active, request the remote browser info and read the `webSocketDebuggerUrl`.
+Once the session is active, the `cdpUrl` field in the session object will be populated.
 
 ```bash
-# Replace <SESSION_ID> and region host as needed
-curl -s https://gcp-usc1-1.milan-taurine.tera.space/v1/consumer/<SESSION_ID>/json/version | jq '.'
+# Get the session details
+curl -s "https://api.browser.cash/v1/browser/session?sessionId=<SESSION_ID>" \
+  -H "Authorization: Bearer $BROWSER_API_KEY" | jq '.cdpUrl'
 ```
 
-That endpoint returns a local-style `webSocketDebuggerUrl` (e.g., `ws://127.0.0.1/devtools/browser/...`).
-Construct an external CDP URL by swapping the prefix:
-
-```typescript
-function toExternalCdp(sessionId: string, localUrl: string) {
-  // ws://127.0.0.1/devtools/browser/...  ->  wss://<milan-host>/v1/consumer/<sessionId>/devtools/browser/...
-  const milanHost = 'gcp-usc1-1.milan-taurine.tera.space'
-  return localUrl.replace('ws://127.0.0.1', `wss://${milanHost}/v1/consumer/${sessionId}`)
-}
-```
-
-Use that final CDP URL with Playwright/Puppeteer — or see the guide: [/browser-api/guides/cdp-playwright](/browser-api/guides/cdp-playwright).
+Use that CDP URL with Playwright/Puppeteer — or see the guide: [/browser-api/guides/cdp-playwright](/browser-api/guides/cdp-playwright).
 
 ### 4) Open a new page (tab)
 
+You can use the Chrome DevTools Protocol HTTP endpoints on the node. The host matches your `cdpUrl`.
+
 ```bash
 # URL is provided as the query string; defaults to about:blank when omitted
+# Replace <NODE_HOST> with the host from your cdpUrl (e.g. gcp-usc1-1.milan-taurine.tera.space)
 curl -X PUT \
-  https://gcp-usc1-1.milan-taurine.tera.space/v1/consumer/<SESSION_ID>/json/new?https%3A%2F%2Fexample.com
+  https://<NODE_HOST>/v1/consumer/<SESSION_ID>/json/new?https%3A%2F%2Fexample.com
 ```
 
 ### 5) Stop the session
@@ -206,11 +199,11 @@ curl -X PUT \
 ```bash curl
 curl -X DELETE \
   -H "Authorization: Bearer $BROWSER_API_KEY" \
-  "https://browser-api.browser.cash/v1/consumer/session?sessionId=<SESSION_ID>"
+  "https://api.browser.cash/v1/browser/session?sessionId=<SESSION_ID>"
 ```
 
 ```typescript fetch
-await fetch(`https://browser-api.browser.cash/v1/consumer/session?sessionId=${encodeURIComponent(sessionId)}`, {
+await fetch(`https://api.browser.cash/v1/browser/session?sessionId=${encodeURIComponent(sessionId)}`, {
   method: 'DELETE',
   headers: { Authorization: `Bearer ${process.env.BROWSER_API_KEY}` },
 })

@@ -2,6 +2,9 @@
     "$schema": "https://mintlify.com/docs.json",
     "theme": "mint",
     "name": "Mega Tera Corp",
+    "redirects": [
+        { "source": "/", "destination": "/docs" }
+    ],
     "colors": {
         "primary": "#F0B15C",
         "light": "#FFD38A",

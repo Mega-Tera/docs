@@ -24,11 +24,11 @@ description: "Create an agent task and fetch results"
 - Copy your Agent API key from the dashboard.
 - Send it in the header: `Authorization: Bearer <AGENT_API_KEY>`.
 
-Base URL: `https://agent-api.browser.cash`
+Base URL: `https://api.browser.cash`
 
 You can optionally set environment variables in your shell:
 
-- `API_BASE=https://agent-api.browser.cash`
+- `API_BASE=https://api.browser.cash`
 - `API_KEY=<your key>`
 
 ## Create a task
@@ -36,7 +36,7 @@ You can optionally set environment variables in your shell:
 <CodeGroup>
 
 ```bash cURL
-curl -X POST "https://agent-api.browser.cash/v1/task/create" \
+curl -X POST "https://api.browser.cash/v1/agent/task" \
   -H "Authorization: Bearer $API_KEY" \
   -H "content-type: application/json" \
   -d '{"agent":"gemini","prompt":"What does example.com homepage say?","mode":"text","stepLimit":10}'
@@ -49,7 +49,7 @@ API_BASE = os.getenv('API_BASE')
 API_KEY = os.getenv('API_KEY')
 
 resp = requests.post(
-    f"{API_BASE}/v1/task/create",
+    f"{API_BASE}/v1/agent/task",
     headers={
         "Authorization": f"Bearer {API_KEY}",
         "content-type": "application/json",
@@ -63,7 +63,7 @@ print(resp.json())
 const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
 
-const res = await fetch(`${API_BASE}/v1/task/create`, {
+const res = await fetch(`${API_BASE}/v1/agent/task`, {
   method: 'POST',
   headers: {
     Authorization: `Bearer ${API_KEY}`,
@@ -88,7 +88,7 @@ Example response (200):
 
 ```bash cURL
 curl -H "Authorization: Bearer $API_KEY" \
-  "https://agent-api.browser.cash/v1/task/$TASK_ID"
+  "https://api.browser.cash/v1/agent/task?taskId=$TASK_ID"
 ```
 
 ```python Python
@@ -99,8 +99,9 @@ API_KEY = os.getenv('API_KEY')
 TASK_ID = os.getenv('TASK_ID')
 
 resp = requests.get(
-    f"{API_BASE}/v1/task/{TASK_ID}",
+    f"{API_BASE}/v1/agent/task",
     headers={"Authorization": f"Bearer {API_KEY}"},
+    params={"taskId": TASK_ID},
 )
 print(resp.json())
 ```
@@ -110,7 +111,7 @@ const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
 const TASK_ID = process.env.TASK_ID!;
 
-const res = await fetch(`${API_BASE}/v1/task/${TASK_ID}`, {
+const res = await fetch(`${API_BASE}/v1/agent/task?taskId=${TASK_ID}`, {
   headers: { Authorization: `Bearer ${API_KEY}` },
 });
 console.log(await res.json());
@@ -126,7 +127,7 @@ Typical fields include a `status` (e.g., queued, running, completed, failed) and
 
 ```bash cURL
 curl -H "Authorization: Bearer $API_KEY" \
-  "$API_BASE/v1/task/list?pageSize=20&page=1"
+  "$API_BASE/v1/agent/tasks?pageSize=20&page=1"
 ```
 
 ```python Python
@@ -136,7 +137,7 @@ API_BASE = os.getenv('API_BASE')
 API_KEY = os.getenv('API_KEY')
 
 resp = requests.get(
-    f"{API_BASE}/v1/task/list",
+    f"{API_BASE}/v1/agent/tasks",
     headers={"Authorization": f"Bearer {API_KEY}"},
     params={"pageSize": 20, "page": 1},
 )
@@ -147,7 +148,7 @@ print(resp.json())
 const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
 
-const res = await fetch(`${API_BASE}/v1/task/list?pageSize=20&page=1`, {
+const res = await fetch(`${API_BASE}/v1/agent/tasks?pageSize=20&page=1`, {
   headers: { Authorization: `Bearer ${API_KEY}` },
 });
 console.log(await res.json());
@@ -160,6 +161,6 @@ Learn more in Guides: [/agent-api/guides/agent-tasks](/agent-api/guides/agent-ta
 Tip: Prefer environment variables over hardcoding keys. In PowerShell, set an env var for the current session with:
 
 ```powershell
-$env:API_BASE = "https://agent-api.browser.cash"
+$env:API_BASE = "https://api.browser.cash"
 $env:API_KEY = "<your key>"
 ```

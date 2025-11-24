@@ -27,7 +27,7 @@ description: "Get started with our hosted browsers and browser agents."
     <CodeGroup>
 
 ```bash cURL
-curl -X POST "https://browser-api.browser.cash/v1/consumer/session" \
+curl -X POST "https://api.browser.cash/v1/browser/session" \
   -H "Authorization: Bearer $BROWSER_API_KEY" \
   -H "content-type: application/json" \
   -d '{}'
@@ -40,7 +40,7 @@ import requests
 BROWSER_API_KEY = os.getenv("BROWSER_API_KEY")
 
 resp = requests.post(
-    "https://browser-api.browser.cash/v1/consumer/session",
+    "https://api.browser.cash/v1/browser/session",
     headers={
         "Authorization": f"Bearer {BROWSER_API_KEY}",
         "content-type": "application/json",
@@ -54,7 +54,7 @@ print("sessionId:", data.get("sessionId"))
 ```typescript TypeScript
 const BROWSER_API_KEY = process.env.BROWSER_API_KEY!;
 
-const res = await fetch("https://browser-api.browser.cash/v1/consumer/session", {
+const res = await fetch("https://api.browser.cash/v1/browser/session", {
   method: "POST",
   headers: {
     Authorization: `Bearer ${BROWSER_API_KEY}`,
@@ -75,7 +75,7 @@ console.log("sessionId:", data.sessionId);
     <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
       <button
         className="run-request-btn run-icon"
-        data-url="https://browser-api.browser.cash/v1/consumer/session"
+        data-url="https://api.browser.cash/v1/browser/session"
         data-method="POST"
         data-body="{}"
         aria-label="Test Request"
@@ -103,7 +103,7 @@ console.log("sessionId:", data.sessionId);
     <CodeGroup>
 
 ```bash cURL
-curl -X POST "https://agent-api.browser.cash/v1/task/create" \
+curl -X POST "https://api.browser.cash/v1/agent/task" \
   -H "Authorization: Bearer $API_KEY" \
   -H "content-type: application/json" \
   -d '{"agent":"gemini","prompt":"What text does the homepage of example.com say?","mode":"text","stepLimit":10}'
@@ -117,7 +117,7 @@ API_BASE = os.getenv("API_BASE")
 API_KEY = os.getenv("API_KEY")
 
 resp = requests.post(
-    API_BASE + "/v1/task/create",
+    API_BASE + "/v1/agent/task",
     headers={
         "Authorization": f"Bearer {API_KEY}",
         "content-type": "application/json",
@@ -131,7 +131,7 @@ print(resp.json())
 const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
 
-const res = await fetch(API_BASE + "/v1/task/create", {
+const res = await fetch(API_BASE + "/v1/agent/task", {
   method: "POST",
   headers: {
     Authorization: "Bearer " + API_KEY,
@@ -152,7 +152,7 @@ console.log(await res.json());
     <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
       <button
         className="run-request-btn run-icon"
-        data-url="https://agent-api.browser.cash/v1/task/create"
+        data-url="https://api.browser.cash/v1/agent/task"
         data-method="POST"
         data-body={`{"agent":"gemini","prompt":"What text does the homepage of example.com say?","mode":"text","stepLimit":10}`}
         style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
@@ -178,7 +178,7 @@ console.log(await res.json());
 
 ```bash cURL
 # Get a session status
-curl "https://browser-api.browser.cash/v1/consumer/session?sessionId=$SESSION_ID" \
+curl "https://api.browser.cash/v1/browser/session?sessionId=$SESSION_ID" \
   -H "Authorization: Bearer $BROWSER_API_KEY"
 ```
 
@@ -190,7 +190,7 @@ BROWSER_API_KEY = os.getenv("BROWSER_API_KEY")
 SESSION_ID = os.getenv("SESSION_ID")
 
 resp = requests.get(
-    "https://browser-api.browser.cash/v1/consumer/session",
+    "https://api.browser.cash/v1/browser/session",
     headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
     params={"sessionId": SESSION_ID},
 )
@@ -202,7 +202,7 @@ const BROWSER_API_KEY = process.env.BROWSER_API_KEY!;
 const SESSION_ID = process.env.SESSION_ID!;
 
 const res = await fetch(
-  `https://browser-api.browser.cash/v1/consumer/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
+  `https://api.browser.cash/v1/browser/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
   { headers: { Authorization: `Bearer ${BROWSER_API_KEY}` } }
 );
 console.log(await res.json());
@@ -229,7 +229,7 @@ console.log(await res.json());
     <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
       <button
         className="run-request-btn run-icon"
-        data-url="https://browser-api.browser.cash/v1/consumer/session?sessionId={sessionId}"
+        data-url="https://api.browser.cash/v1/browser/session?sessionId={sessionId}"
         data-method="GET"
         data-vars='{"sessionId":"#session-id-input-get"}'
         style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
@@ -252,7 +252,7 @@ console.log(await res.json());
 
 ```bash cURL
 # Stop a session
-curl -X DELETE "https://browser-api.browser.cash/v1/consumer/session?sessionId=$SESSION_ID" \
+curl -X DELETE "https://api.browser.cash/v1/browser/session?sessionId=$SESSION_ID" \
   -H "Authorization: Bearer $BROWSER_API_KEY"
 ```
 
@@ -264,7 +264,7 @@ BROWSER_API_KEY = os.getenv("BROWSER_API_KEY")
 SESSION_ID = os.getenv("SESSION_ID")
 
 resp = requests.delete(
-    "https://browser-api.browser.cash/v1/consumer/session",
+    "https://api.browser.cash/v1/browser/session",
     headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
     params={"sessionId": SESSION_ID},
 )
@@ -276,7 +276,7 @@ const BROWSER_API_KEY = process.env.BROWSER_API_KEY!;
 const SESSION_ID = process.env.SESSION_ID!;
 
 const res = await fetch(
-  `https://browser-api.browser.cash/v1/consumer/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
+  `https://api.browser.cash/v1/browser/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
   { method: "DELETE", headers: { Authorization: `Bearer ${BROWSER_API_KEY}` } }
 );
 console.log("stopped", res.status);
@@ -303,7 +303,7 @@ console.log("stopped", res.status);
     <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
       <button
         className="run-request-btn run-icon"
-        data-url="https://browser-api.browser.cash/v1/consumer/session?sessionId={sessionId}"
+        data-url="https://api.browser.cash/v1/browser/session?sessionId={sessionId}"
         data-method="DELETE"
         data-vars='{"sessionId":"#session-id-input-stop"}'
         style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
@@ -326,7 +326,7 @@ console.log("stopped", res.status);
 
 ```bash cURL
 curl -H "Authorization: Bearer $API_KEY" \
-  "https://agent-api.browser.cash/v1/task/$TASK_ID"
+  "https://api.browser.cash/v1/agent/task?taskId=$TASK_ID"
 ```
 
 ```python Python
@@ -338,8 +338,9 @@ API_KEY = os.getenv("API_KEY")
 TASK_ID = os.getenv("TASK_ID")
 
 resp = requests.get(
-    API_BASE + "/v1/task/" + str(TASK_ID),
+    API_BASE + "/v1/agent/task",
     headers={"Authorization": f"Bearer {API_KEY}"},
+    params={"taskId": TASK_ID},
 )
 print(resp.json())
 ```
@@ -349,7 +350,7 @@ const API_BASE = process.env.API_BASE!;
 const API_KEY = process.env.API_KEY!;
 const TASK_ID = process.env.TASK_ID!;
 
-const res = await fetch(API_BASE + "/v1/task/" + TASK_ID, {
+const res = await fetch(`${API_BASE}/v1/agent/task?taskId=${TASK_ID}`, {
   headers: { Authorization: "Bearer " + API_KEY },
 });
 console.log(await res.json());
@@ -376,7 +377,7 @@ console.log(await res.json());
     <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
       <button
         className="run-request-btn run-btn"
-        data-url="https://agent-api.browser.cash/v1/task/{taskId}"
+        data-url="https://api.browser.cash/v1/agent/task?taskId={taskId}"
         data-method="GET"
         data-vars='{"taskId":"#task-id-input"}'
         style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
