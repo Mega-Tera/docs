@@ -2,7 +2,6 @@
     "$schema": "https://mintlify.com/docs.json",
     "theme": "mint",
     "name": "Mega Tera Corp",
-    "openapi": "openapi.yaml",
     "colors": {
         "primary": "#F0B15C",
         "light": "#FFD38A",
@@ -49,6 +48,10 @@
                         ]
                     }
                 ]
+            },
+            {
+                "tab": "API Reference",
+                "href": "https://api.browser.cash/scalar"
             }
         ],
         "global": {
@@ -63,7 +66,7 @@
         "links": [
             {
                 "label": "Support",
-                "href": "mailto:support@tera.space"
+                "href": "mailto:hello@browser.cash"
             }
         ],
         "primary": {
