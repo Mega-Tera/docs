@@ -1,48 +1,51 @@
 ---
-title: "Agent tasks"
-description: "Create, fetch, and list tasks with the Agent API"
----
-
-<script>
-  {(function(){
-    function fixLinks(){
-      var nodes=document.querySelectorAll('a[href^="/"]');
-      nodes.forEach(function(a){
-        var href=a.getAttribute('href')||'';
-        if(!href) return;
-        if(href.startsWith('/docs')) return;
-        if(href.startsWith('/_next')||href.startsWith('/mintlify-assets')||href.startsWith('/logo')||href.startsWith('/socket.io')) return;
-        a.setAttribute('href','/docs'+href);
-      });
-    }
-    if(document.readyState!=='loading') fixLinks();
-    else document.addEventListener('DOMContentLoaded',fixLinks);
-  })()}
-  </script>
-## What is an agent task?
-
-An agent task asks a named agent (e.g., `gemini`) to perform work based on your prompt. You create a task, then check its status or results, and you can list recent tasks for auditing.
-
-Base URL: `https://api.browser.cash`
-
-Authentication: Send `Authorization: Bearer <AGENT_API_KEY>`.
-
 ## Create a task
 
 <CodeGroup>
 
+```typescript TypeScript (SDK)
+import BrowsercashSDK from '@browsercash/sdk';
+
+const client = new BrowsercashSDK({
+  apiKey: process.env.BROWSER_API_KEY!,
+});
+
+const agent = await client.agent.task.create({
+  agent: 'gemini',
+  prompt: 'What text does the homepage of example.com say?',
+  mode: 'text',
+  stepLimit: 10,
+});
+
+console.log(agent.taskId);
+```
+
 ```bash cURL
 curl -X POST "https://api.browser.cash/v1/agent/task" \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "content-type: application/json" \
-  -d '{"agent":"gemini","prompt":"What does example.com homepage say?","mode":"text","stepLimit":10}'
+  -H "Authorization: Bearer $BROWSER_API_KEY" \
+  -H "content-type": "application/json" \
+  -d '{"agent":"gemini","prompt":"What text does the homepage of example.com say?","mode":"text","stepLimit":10}'
 ```
 
 ```python Python
 import os, requests
 
-API_BASE = os.getenv('API_BASE')
-API_KEY = os.getenv('API_KEY')
+API_BASE = os.getenv('API_BASE', 'https://api.browser.cash')
+BROWSER_API_KEY = os.getenv('BROWSER_API_KEY')
+
+resp = requests.post(
+    f"{API_BASE}/v1/agent/task",
+    headers={
+        "Authorization": f"Bearer {BROWSER_API_KEY}",
+        "content-type": "application/json",
+    },
+    json={"agent": "gemini", "prompt": "What text does the homepage of example.com say?", "mode": "text", "stepLimit": 10},
+)
+data = resp.json()
+print("taskId:", data.get("taskId"))
+```
+
+</CodeGroup>
 
 resp = requests.post(
     f"{API_BASE}/v1/agent/task",
@@ -82,35 +85,36 @@ Example response (200):
 
 <CodeGroup>
 
+```typescript TypeScript (SDK)
+import BrowsercashSDK from '@browsercash/sdk';
+
+const client = new BrowsercashSDK({
+  apiKey: process.env.BROWSER_API_KEY!,
+});
+
+const agent = await client.agent.task.get({ taskId: process.env.TASK_ID! });
+
+console.log(agent);
+```
+
 ```bash cURL
-curl -H "Authorization: Bearer $API_KEY" \
+curl -H "Authorization: Bearer $BROWSER_API_KEY" \
   "https://api.browser.cash/v1/agent/task?taskId=$TASK_ID"
 ```
 
 ```python Python
 import os, requests
 
-API_BASE = os.getenv('API_BASE')
-API_KEY = os.getenv('API_KEY')
+API_BASE = os.getenv('API_BASE', 'https://api.browser.cash')
+BROWSER_API_KEY = os.getenv('BROWSER_API_KEY')
 TASK_ID = os.getenv('TASK_ID')
 
 resp = requests.get(
     f"{API_BASE}/v1/agent/task",
-    headers={"Authorization": f"Bearer {API_KEY}"},
+    headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
     params={"taskId": TASK_ID},
 )
 print(resp.json())
-```
-
-```typescript TypeScript
-const API_BASE = process.env.API_BASE!;
-const API_KEY = process.env.API_KEY!;
-const TASK_ID = process.env.TASK_ID!;
-
-const res = await fetch(`${API_BASE}/v1/agent/task?taskId=${TASK_ID}`, {
-  headers: { Authorization: `Bearer ${API_KEY}` },
-});
-console.log(await res.json());
 ```
 
 </CodeGroup>
@@ -121,33 +125,35 @@ Expect fields like `status` (queued, running, completed, failed) and, once compl
 
 <CodeGroup>
 
+```typescript TypeScript (SDK)
+import BrowsercashSDK from '@browsercash/sdk';
+
+const client = new BrowsercashSDK({
+  apiKey: process.env.BROWSER_API_KEY!,
+});
+
+const tasks = await client.agent.task.list({ pageSize: 20, page: 1 });
+
+console.log(tasks);
+```
+
 ```bash cURL
-curl -H "Authorization: Bearer $API_KEY" \
+curl -H "Authorization: Bearer $BROWSER_API_KEY" \
   "https://api.browser.cash/v1/agent/tasks?pageSize=20&page=1"
 ```
 
 ```python Python
 import os, requests
 
-API_BASE = os.getenv('API_BASE')
-API_KEY = os.getenv('API_KEY')
+API_BASE = os.getenv('API_BASE', 'https://api.browser.cash')
+BROWSER_API_KEY = os.getenv('BROWSER_API_KEY')
 
 resp = requests.get(
     f"{API_BASE}/v1/agent/tasks",
-    headers={"Authorization": f"Bearer {API_KEY}"},
+    headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
     params={"pageSize": 20, "page": 1},
 )
 print(resp.json())
-```
-
-```typescript TypeScript
-const API_BASE = process.env.API_BASE!;
-const API_KEY = process.env.API_KEY!;
-
-const res = await fetch(`${API_BASE}/v1/agent/tasks?pageSize=20&page=1`, {
-  headers: { Authorization: `Bearer ${API_KEY}` },
-});
-console.log(await res.json());
 ```
 
 </CodeGroup>

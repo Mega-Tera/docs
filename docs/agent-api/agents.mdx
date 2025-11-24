@@ -34,13 +34,23 @@ Gemini Computer Use provides fast, high-quality responses through our API. This 
 - Recommended default choice
 - Reliable performance across varied tasks
 
-**Example usage:**
+**Example usage (TypeScript SDK):**
 
-```bash
-curl -X POST "https://api.browser.cash/v1/agent/task" \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "content-type: application/json" \
-  -d '{"agent":"gemini","prompt":"What does example.com homepage say?","mode":"text","stepLimit":10}'
+```typescript
+import BrowsercashSDK from '@browsercash/sdk';
+
+const client = new BrowsercashSDK({
+  apiKey: process.env.BROWSER_API_KEY!,
+});
+
+const agent = await client.agent.task.create({
+  agent: 'gemini',
+  prompt: 'What text does the homepage of example.com say?',
+  mode: 'text',
+  stepLimit: 10,
+});
+
+console.log(agent.taskId);
 ```
 
 ## Glitter
