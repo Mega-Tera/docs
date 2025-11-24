@@ -16,27 +16,27 @@
                     {
                         "group": "Getting Started",
                         "pages": [
-                            "/docs/index",
-                            "/docs/pricing"
+                            "/index",
+                            "/pricing"
                         ]
                     },
                     {
                         "group": "Browser API",
                         "pages": [
-                            "docs/browser-api/quickstart",
-                            "docs/browser-api/using-quickconnect",
-                            "docs/browser-api/using-session-api"
+                            "/browser-api/quickstart",
+                            "/browser-api/using-quickconnect",
+                            "/browser-api/using-session-api"
                         ]
                     },
                     {
                         "group": "Agent API",
                         "pages": [
-                            "/docs/agent-api/quickstart",
-                            "/docs/agent-api/agents",
+                            "/agent-api/quickstart",
+                            "/agent-api/agents",
                             {
                                 "group": "Guides",
                                 "pages": [
-                                    "/docs/agent-api/guides/agent-tasks"
+                                    "/agent-api/guides/agent-tasks"
                                 ]
                             }
                         ]
@@ -44,7 +44,7 @@
                     {
                         "group": "Account",
                         "pages": [
-                            "/docs/account/billing"
+                            "/account/billing"
                         ]
                     }
                 ]
