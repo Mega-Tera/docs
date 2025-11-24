@@ -32,7 +32,8 @@
                             {
                                 "group": "Integrations",
                                 "pages": [
-                                    "/docs/browser-api/integrations/browser-use"
+                                    "/docs/browser-api/integrations/browser-use",
+                                    "/docs/browser-api/integrations/crawl4ai"
                                 ]
                             }
                         ]
