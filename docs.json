@@ -28,7 +28,13 @@
                         "pages": [
                             "docs/browser-api/quickstart",
                             "docs/browser-api/using-quickconnect",
-                            "docs/browser-api/using-session-api"
+                            "docs/browser-api/using-session-api",
+                            {
+                                "group": "Integrations",
+                                "pages": [
+                                    "/docs/browser-api/integrations/browser-use"
+                                ]
+                            }
                         ]
                     },
                     {
