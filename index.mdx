@@ -1,0 +1,409 @@
+﻿---
+title: "Overview"
+description: "Get started with our hosted browsers and browser agents."
+---
+
+<script defer src="/docs-prefill.js"></script>
+<script>
+  {(function(){
+    function fixLinks(){
+      var nodes=document.querySelectorAll('a[href^="/"]');
+      nodes.forEach(function(a){
+        var href=a.getAttribute('href')||'';
+        if(!href) return;
+        if(href.startsWith('/docs')) return;
+        // Skip framework/runtime paths
+        if(href.startsWith('/_next')||href.startsWith('/mintlify-assets')||href.startsWith('/logo')||href.startsWith('/socket.io')) return;
+        a.setAttribute('href','/docs'+href);
+      });
+    }
+    if(document.readyState!=='loading') fixLinks();
+    else document.addEventListener('DOMContentLoaded',fixLinks);
+  })()}
+  </script>
+
+<Tabs>
+  <Tab title="Start Browser Session">
+    <CodeGroup>
+
+```bash cURL
+curl -X POST "https://api.browser.cash/v1/browser/session" \
+  -H "Authorization: Bearer $BROWSER_API_KEY" \
+  -H "content-type: application/json" \
+  -d '{}'
+```
+
+```python Python
+import os
+import requests
+
+BROWSER_API_KEY = os.getenv("BROWSER_API_KEY")
+
+resp = requests.post(
+    "https://api.browser.cash/v1/browser/session",
+    headers={
+        "Authorization": f"Bearer {BROWSER_API_KEY}",
+        "content-type": "application/json",
+    },
+    json={},
+)
+data = resp.json()
+print("sessionId:", data.get("sessionId"))
+```
+
+```typescript TypeScript
+const BROWSER_API_KEY = process.env.BROWSER_API_KEY!;
+
+const res = await fetch("https://api.browser.cash/v1/browser/session", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${BROWSER_API_KEY}`,
+    "content-type": "application/json",
+  },
+  body: JSON.stringify({}),
+});
+const data = await res.json();
+console.log("sessionId:", data.sessionId);
+```
+
+    </CodeGroup>
+
+    <style>
+      {`
+      `}
+    </style>
+    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+      <button
+        className="run-request-btn run-icon"
+        data-url="https://api.browser.cash/v1/browser/session"
+        data-method="POST"
+        data-body="{}"
+        aria-label="Test Request"
+        style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+      >
+        <svg className="run-icon-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg className="run-spinner" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ display: 'none' }}>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"></circle>
+          <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" opacity="0.75"></path>
+        </svg>
+        Test Request
+      </button>
+      <span className="run-status"></span>
+      <div className="run-response">
+        <div
+          className="run-output"
+          style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto', marginBottom: '6px'}}
+        ></div>
+      </div>
+    </div>
+
+  </Tab>
+
+  <Tab title="Trigger Agent Task">
+    <CodeGroup>
+
+```bash cURL
+curl -X POST "https://api.browser.cash/v1/agent/task" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "content-type: application/json" \
+  -d '{"agent":"gemini","prompt":"What text does the homepage of example.com say?","mode":"text","stepLimit":10}'
+```
+
+```python Python
+import os
+import requests
+
+API_BASE = os.getenv("API_BASE")
+API_KEY = os.getenv("API_KEY")
+
+resp = requests.post(
+    API_BASE + "/v1/agent/task",
+    headers={
+        "Authorization": f"Bearer {API_KEY}",
+        "content-type": "application/json",
+    },
+    json={"agent": "gemini", "prompt": "What text does the homepage of example.com say?", "mode": "text", "stepLimit": 10},
+)
+print(resp.json())
+```
+
+```typescript TypeScript
+const API_BASE = process.env.API_BASE!;
+const API_KEY = process.env.API_KEY!;
+
+const res = await fetch(API_BASE + "/v1/agent/task", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer " + API_KEY,
+    "content-type": "application/json",
+  },
+  body: JSON.stringify({
+    agent: "gemini",
+    prompt: "What text does the homepage of example.com say?",
+    mode: "text",
+    stepLimit: 10,
+  }),
+});
+console.log(await res.json());
+```
+
+    </CodeGroup>
+
+    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+      <button
+        className="run-request-btn run-icon"
+        data-url="https://api.browser.cash/v1/agent/task"
+        data-method="POST"
+        data-body={`{"agent":"gemini","prompt":"What text does the homepage of example.com say?","mode":"text","stepLimit":10}`}
+        style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+      >
+        <svg className="run-icon-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg className="run-spinner" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ display: 'none' }}>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"></circle>
+          <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" opacity="0.75"></path>
+        </svg>
+        Test Request
+      </button>
+      <span className="run-status"></span>
+     <div
+          className="run-output"
+          style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto', marginBottom: '6px'}}
+          ></div>
+    </div>
+
+  </Tab>
+
+  <Tab title="Get Session">
+    <CodeGroup>
+
+```bash cURL
+# Get a session status
+curl "https://api.browser.cash/v1/browser/session?sessionId=$SESSION_ID" \
+  -H "Authorization: Bearer $BROWSER_API_KEY"
+```
+
+```python Python
+import os
+import requests
+
+BROWSER_API_KEY = os.getenv("BROWSER_API_KEY")
+SESSION_ID = os.getenv("SESSION_ID")
+
+resp = requests.get(
+    "https://api.browser.cash/v1/browser/session",
+    headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
+    params={"sessionId": SESSION_ID},
+)
+print(resp.json())
+```
+
+```typescript TypeScript
+const BROWSER_API_KEY = process.env.BROWSER_API_KEY!;
+const SESSION_ID = process.env.SESSION_ID!;
+
+const res = await fetch(
+  `https://api.browser.cash/v1/browser/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
+  { headers: { Authorization: `Bearer ${BROWSER_API_KEY}` } }
+);
+console.log(await res.json());
+```
+
+    </CodeGroup>
+
+    <div style={{ marginTop: '10px', marginBottom: '12px' }}>
+      <input
+        id="session-id-input-get"
+        className="run-input"
+        placeholder="sessionId"
+        style={{
+          width: '260px',
+          background: 'transparent',
+          color: 'inherit',
+          border: '1px solid #ddd',
+          padding: '6px 12px',
+          borderRadius: '9999px',
+          outline: 'none',
+        }}
+      />
+    </div>
+    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+      <button
+        className="run-request-btn run-icon"
+        data-url="https://api.browser.cash/v1/browser/session?sessionId={sessionId}"
+        data-method="GET"
+        data-vars='{"sessionId":"#session-id-input-get"}'
+        style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+      >
+        <svg className="run-icon-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg className="run-spinner" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ display: 'none' }}>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"></circle>
+          <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" opacity="0.75"></path>
+        </svg>
+        Test Request
+      </button>
+      <span className="run-status"></span>
+      <div className="run-output" style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto' }}></div>
+    </div>
+
+  </Tab>
+
+  <Tab title="Stop Session">
+    <CodeGroup>
+
+```bash cURL
+# Stop a session
+curl -X DELETE "https://api.browser.cash/v1/browser/session?sessionId=$SESSION_ID" \
+  -H "Authorization: Bearer $BROWSER_API_KEY"
+```
+
+```python Python
+import os
+import requests
+
+BROWSER_API_KEY = os.getenv("BROWSER_API_KEY")
+SESSION_ID = os.getenv("SESSION_ID")
+
+resp = requests.delete(
+    "https://api.browser.cash/v1/browser/session",
+    headers={"Authorization": f"Bearer {BROWSER_API_KEY}"},
+    params={"sessionId": SESSION_ID},
+)
+print("stopped:", resp.status_code)
+```
+
+```typescript TypeScript
+const BROWSER_API_KEY = process.env.BROWSER_API_KEY!;
+const SESSION_ID = process.env.SESSION_ID!;
+
+const res = await fetch(
+  `https://api.browser.cash/v1/browser/session?sessionId=${encodeURIComponent(SESSION_ID)}`,
+  { method: "DELETE", headers: { Authorization: `Bearer ${BROWSER_API_KEY}` } }
+);
+console.log("stopped", res.status);
+```
+
+    </CodeGroup>
+
+    <div style={{ marginTop: '10px', marginBottom: '12px' }}>
+      <input
+        id="session-id-input-stop"
+        className="run-input"
+        placeholder="sessionId"
+        style={{
+          width: '260px',
+          background: 'transparent',
+          color: 'inherit',
+          border: '1px solid #ddd',
+          padding: '6px 12px',
+          borderRadius: '9999px',
+          outline: 'none',
+        }}
+      />
+    </div>
+    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+      <button
+        className="run-request-btn run-icon"
+        data-url="https://api.browser.cash/v1/browser/session?sessionId={sessionId}"
+        data-method="DELETE"
+        data-vars='{"sessionId":"#session-id-input-stop"}'
+        style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+      >
+        <svg className="run-icon-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg className="run-spinner" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ display: 'none' }}>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"></circle>
+          <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" opacity="0.75"></path>
+        </svg>
+        Test Request
+      </button>
+      <span className="run-status"></span>
+      <div className="run-output" style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto' }}></div>
+    </div>
+
+  </Tab>
+
+  <Tab title="Get Agent Task">
+    <CodeGroup>
+
+```bash cURL
+curl -H "Authorization: Bearer $API_KEY" \
+  "https://api.browser.cash/v1/agent/task?taskId=$TASK_ID"
+```
+
+```python Python
+import os
+import requests
+
+API_BASE = os.getenv("API_BASE")
+API_KEY = os.getenv("API_KEY")
+TASK_ID = os.getenv("TASK_ID")
+
+resp = requests.get(
+    API_BASE + "/v1/agent/task",
+    headers={"Authorization": f"Bearer {API_KEY}"},
+    params={"taskId": TASK_ID},
+)
+print(resp.json())
+```
+
+```typescript TypeScript
+const API_BASE = process.env.API_BASE!;
+const API_KEY = process.env.API_KEY!;
+const TASK_ID = process.env.TASK_ID!;
+
+const res = await fetch(`${API_BASE}/v1/agent/task?taskId=${TASK_ID}`, {
+  headers: { Authorization: "Bearer " + API_KEY },
+});
+console.log(await res.json());
+```
+
+    </CodeGroup>
+
+    <div style={{ marginTop: '10px', marginBottom: '12px' }}>
+      <input
+        id="task-id-input"
+        className="run-input"
+        placeholder="taskId"
+        style={{
+          width: '260px',
+          background: 'transparent',
+          color: 'inherit',
+          border: '1px solid #ddd',
+          padding: '6px 12px',
+          borderRadius: '9999px',
+          outline: 'none',
+        }}
+      />
+    </div>
+    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+      <button
+        className="run-request-btn run-btn"
+        data-url="https://api.browser.cash/v1/agent/task?taskId={taskId}"
+        data-method="GET"
+        data-vars='{"taskId":"#task-id-input"}'
+        style={{ background: '#fff', color: '#000', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '9999px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+      >
+        <svg className="run-icon-svg" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg className="run-spinner" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ display: 'none' }}>
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"></circle>
+          <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" opacity="0.75"></path>
+        </svg>
+        Test Request
+      </button>
+      <span className="run-status"></span>
+      <div className="run-output" style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto' }}></div>
+    </div>
+
+  </Tab>
+</Tabs>
+
+<h2 style={{ marginTop: "8px" }}>Products</h2>
+
+  <CardGroup cols={2}>
+  <Card title="Browser API" href="/docs/browser-api/quickstart" icon="browser">
+    Launch hosted browsers for web automation, scraping, and testing at scale.
+  </Card>
+  <Card title="Agent API" href="/docs/agent-api/quickstart" icon="robot">
+    Deploy autonomous agents that can browse the web, interact with pages, and
+    complete complex tasks.
+  </Card>
+</CardGroup>

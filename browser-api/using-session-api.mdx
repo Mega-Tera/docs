@@ -1,0 +1,225 @@
+---
+title: "Using the Session API"
+description: "Create and manage browser sessions programmatically via REST or our lightweight JS SDK, then connect using CDP."
+---
+
+<script>
+  {(function(){
+    function fixLinks(){
+      var nodes=document.querySelectorAll('a[href^="/"]');
+      nodes.forEach(function(a){
+        var href=a.getAttribute('href')||'';
+        if(!href) return;
+        if(href.startsWith('/docs')) return;
+        if(href.startsWith('/_next')||href.startsWith('/mintlify-assets')||href.startsWith('/logo')||href.startsWith('/socket.io')) return;
+        a.setAttribute('href','/docs'+href);
+      });
+    }
+    if(document.readyState!=='loading') fixLinks();
+    else document.addEventListener('DOMContentLoaded',fixLinks);
+  })()}
+  </script>
+## What is the Session API?
+
+The Session API gives you full, programmatic control over managed Chrome sessions:
+
+- Create/stop sessions on demand
+- Retrieve a CDP URL to drive the browser with Playwright or Puppeteer
+- Open/close tabs (targets) and query browser info
+- Integrate sessions into backends, workflows, and automations
+
+If you just want a quick, zero-setup CDP URL, see [Quickconnect](/browser-api/using-quickconnect) instead.
+
+## Prerequisites
+
+- A Browser API key (from the Dashboard)
+- Any HTTP client (curl/fetch) or Node.js 18+ if using the JS SDK
+
+## Option 1 — JavaScript SDK
+
+You can use a tiny SDK to simplify session lifecycle and CDP discovery. Download the latest version [here](https://raw.githubusercontent.com/Mega-Tera/Browser-SDK/refs/tags/v1.0.0/sdk.js), then import it in your app.
+
+<CodeGroup>
+
+```typescript TypeScript
+// import the class from your local path where you saved sdk.js
+import { BrowserSDK } from './sdk.js'
+
+async function main() {
+  const apiKey = process.env.BROWSER_API_KEY! // set your Browser API key
+  const sdk = new BrowserSDK(apiKey)
+
+  // 1) Create a session (optionally pass targeting info)
+  //    The SDK retries a few times and waits ~20s max for the session to become active
+  const session = await sdk.createSession({ /* e.g., region: 'gcp-usc1-1' */ })
+  console.log('Session created:', session.sessionId)
+
+  // 2) Get a CDP URL and connect with Playwright
+  const cdpUrl = await sdk.getBrowserCDPUrl()
+  console.log('CDP URL:', cdpUrl)
+}
+
+main().catch(console.error)
+```
+
+```typescript Playwright (TypeScript)
+import { chromium } from 'playwright'
+import { BrowserSDK } from './sdk.js'
+
+async function run() {
+  const sdk = new BrowserSDK(process.env.BROWSER_API_KEY!)
+  await sdk.createSession()
+
+  const cdpUrl = await sdk.getBrowserCDPUrl()
+  const browser = await chromium.connectOverCDP(cdpUrl)
+  const context = browser.contexts()[0] || await browser.newContext()
+  const page = context.pages()[0] || await context.newPage()
+
+  await page.goto('https://example.com', { waitUntil: 'networkidle' })
+  console.log(await page.title())
+
+  await browser.close()  // closes your client connection
+  await sdk.endSession() // stops the remote session
+}
+
+run().catch(console.error)
+```
+
+```typescript Puppeteer (TypeScript)
+import puppeteer from 'puppeteer-core'
+import { BrowserSDK } from './sdk.js'
+
+async function run() {
+  const sdk = new BrowserSDK(process.env.BROWSER_API_KEY!)
+  await sdk.createSession()
+
+  const cdpUrl = await sdk.getBrowserCDPUrl()
+  const browser = await puppeteer.connect({ browserWSEndpoint: cdpUrl })
+  const page = await browser.newPage()
+  await page.goto('https://example.com')
+  console.log(await page.title())
+
+  await browser.disconnect() // disconnect client only
+  await sdk.endSession()     // stop the remote session
+}
+
+run().catch(console.error)
+```
+
+</CodeGroup>
+
+### Extra SDK capabilities
+
+The SDK you downloaded includes convenience methods you might find useful:
+
+- `createSession(targeting?: object)` — POST /v1/browser/session and wait until active (up to ~20s)
+- `getSessionStatus()` — GET /v1/browser/session?sessionId=...
+- `getBrowserCDPUrl()` — Resolve a CDP URL suitable for Playwright/Puppeteer
+- `getBrowserInfo()` — GET /json/version raw fields from the remote browser
+- `createPage(url?: string)` — Open a new tab/target (default `about:blank`)
+- `closePage(targetId: string)` — Close a tab/target
+- `endSession()` — DELETE /v1/browser/session?sessionId=...
+
+Use these primitives to structure multi-step flows (navigate, extract, upload, etc.).
+
+## Option 2 — REST API (fetch/curl)
+
+You can call the REST endpoints directly if you prefer no SDK.
+
+### 1) Create a session
+
+<CodeGroup>
+
+```bash curl
+curl -s -X POST \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $BROWSER_API_KEY" \
+  https://api.browser.cash/v1/browser/session \
+  -d '{}'
+```
+
+```typescript fetch (Node/Browser)
+const res = await fetch('https://api.browser.cash/v1/browser/session', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${process.env.BROWSER_API_KEY}`,
+  },
+  body: JSON.stringify({ /* optional targeting, e.g. region */ })
+})
+const data = await res.json()
+const sessionId = data.sessionId
+```
+
+</CodeGroup>
+
+### 2) Wait for the session to become active
+
+```typescript
+async function waitForActive(sessionId: string, apiKey: string, timeoutMs = 20_000) {
+  const start = Date.now()
+  const url = `https://api.browser.cash/v1/browser/session?sessionId=${encodeURIComponent(sessionId)}`
+  while (true) {
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${apiKey}` } })
+    const json = await res.json()
+    if (json?.status === 'active') return json
+    if (Date.now() - start > timeoutMs) throw new Error('Timed out waiting for active session')
+    await new Promise(r => setTimeout(r, 1000))
+  }
+}
+```
+
+### 3) Get a CDP URL
+
+Once the session is active, the `cdpUrl` field in the session object will be populated.
+
+```bash
+# Get the session details
+curl -s "https://api.browser.cash/v1/browser/session?sessionId=<SESSION_ID>" \
+  -H "Authorization: Bearer $BROWSER_API_KEY" | jq '.cdpUrl'
+```
+
+Use that CDP URL with Playwright/Puppeteer — or see the guide: [/browser-api/guides/cdp-playwright](/browser-api/guides/cdp-playwright).
+
+### 4) Open a new page (tab)
+
+You can use the Chrome DevTools Protocol HTTP endpoints on the node. The host matches your `cdpUrl`.
+
+```bash
+# URL is provided as the query string; defaults to about:blank when omitted
+# Replace <NODE_HOST> with the host from your cdpUrl (e.g. gcp-usc1-1.milan-taurine.tera.space)
+curl -X PUT \
+  https://<NODE_HOST>/v1/consumer/<SESSION_ID>/json/new?https%3A%2F%2Fexample.com
+```
+
+### 5) Stop the session
+
+<CodeGroup>
+
+```bash curl
+curl -X DELETE \
+  -H "Authorization: Bearer $BROWSER_API_KEY" \
+  "https://api.browser.cash/v1/browser/session?sessionId=<SESSION_ID>"
+```
+
+```typescript fetch
+await fetch(`https://api.browser.cash/v1/browser/session?sessionId=${encodeURIComponent(sessionId)}`, {
+  method: 'DELETE',
+  headers: { Authorization: `Bearer ${process.env.BROWSER_API_KEY}` },
+})
+```
+
+</CodeGroup>
+
+## Timeouts, retries, and tips
+
+- Session activation: allow up to ~20 seconds for the browser to boot on cold nodes
+- The SDK internally retries `createSession` up to 3 times with small backoff and waits for `active`
+- CDP URLs expire with the session; create a new session to get a fresh URL
+- For long-running automations, reconnect your client if the network blips — the remote browser keeps running until you stop it
+
+## See also
+
+- Quickconnect (zero-config CDP): [/browser-api/using-quickconnect](/browser-api/using-quickconnect)
+- CDP + Playwright/Puppeteer guide: [/browser-api/guides/cdp-playwright](/browser-api/guides/cdp-playwright)
+- Agent API quickstart: [/agent-api/quickstart](/agent-api/quickstart)
