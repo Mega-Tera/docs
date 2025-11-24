@@ -13,7 +13,7 @@ The Session API gives you full, programmatic control over managed Chrome session
 - Open/close tabs (targets) and query browser info
 - Integrate sessions into backends, workflows, and automations
 
-If you just want a quick, zero-setup CDP URL, see [Quickconnect](/dash/browser-api/using-quickconnect) instead.
+If you just want a quick, zero-setup CDP URL, see [Quickconnect](/docs/browser-api/using-quickconnect) instead.
 
 ## Prerequisites
 
@@ -164,7 +164,7 @@ curl -s "https://api.browser.cash/v1/browser/session?sessionId=<SESSION_ID>" \
   -H "Authorization: Bearer $BROWSER_API_KEY" | jq '.cdpUrl'
 ```
 
-Use that CDP URL with Playwright/Puppeteer — or see the guide: [/dash/browser-api/guides/cdp-playwright](/dash/browser-api/guides/cdp-playwright).
+Use that CDP URL with Playwright/Puppeteer — or see the guide: [/docs/browser-api/guides/cdp-playwright](/docs/browser-api/guides/cdp-playwright).
 
 ### 4) Open a new page (tab)
 
@@ -205,6 +205,6 @@ await fetch(`https://api.browser.cash/v1/browser/session?sessionId=${encodeURICo
 
 ## See also
 
-- Quickconnect (zero-config CDP): [/dash/browser-api/using-quickconnect](/dash/browser-api/using-quickconnect)
-- CDP + Playwright/Puppeteer guide: [/dash/browser-api/guides/cdp-playwright](/dash/browser-api/guides/cdp-playwright)
+- Quickconnect (zero-config CDP): [/docs/browser-api/using-quickconnect](/docs/browser-api/using-quickconnect)
+- CDP + Playwright/Puppeteer guide: [/docs/browser-api/guides/cdp-playwright](/docs/browser-api/guides/cdp-playwright)
 - Agent API quickstart: [/agent-api/quickstart](/agent-api/quickstart)
