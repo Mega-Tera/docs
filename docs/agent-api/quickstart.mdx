@@ -3,13 +3,24 @@ title: "Quickstart"
 description: "Create an agent task and fetch results"
 ---
 
-
 ## Get an API key
 
 - Copy your Agent API key from the <a href="https://dash.browser.cash/overview">dashboard</a>.
-- Send it in the header: `Authorization: Bearer <AGENT_API_KEY>`.
+- Send it in the header: `Authorization: Bearer <AGENT_API_KEY>` or pass it as an argument to the SDK.
 
-## Create a task
+## (Optional) Install the SDK
+
+If your project uses Node.js or TypeScript, you can install the Browsercash SDK for easier access to the Agent API.
+
+```bash
+npm install @browsercash/sdk
+```
+
+## 1) Create a task
+
+All agents are available via the Agent API. Here is an example using the `gemini` agent to fetch text from a webpage.
+
+Agents are consumed via `tasks`, which you create, fetch, and list.
 
 <CodeGroup>
 
@@ -62,7 +73,11 @@ This will create a new agent task. The response is a `taskId` you can use to tra
 { "taskId": "02a94d68-b9e9-49bd-a3e4-54b8426e3550" }
 ```
 
-## Get a task
+## 2) Get a task
+
+Now that you have a `taskId`, you can fetch the task to track status and retrieve the output of the agent.
+
+An agent's state can either be `active`, `completed`, or `failed`. You can see the full output shape [here](https://api.browser.cash/scalar#get/v1agenttask).
 
 <CodeGroup>
 
@@ -100,9 +115,11 @@ print(resp.json())
 
 </CodeGroup>
 
-Typical fields include a `status` (e.g., queued, running, completed, failed) and implementation-specific details like `result` once complete.
+## 3) List tasks
 
-## List tasks
+After you've ran a few tasks, you might want to list them. Using the list endpoint, you can paginate through your tasks.
+
+This will return a paginated list of tasks you have created. It can have a slightly different shape than fetching a single task. You can see the full output shape [here](https://api.browser.cash/scalar#get/v1agenttasks).
 
 <CodeGroup>
 
@@ -139,11 +156,7 @@ print(resp.json())
 
 </CodeGroup>
 
-Learn more in Guides: [/docs/agent-api/guides/agent-tasks](/docs/agent-api/guides/agent-tasks)
+## Notes:
 
-Tip: Prefer environment variables over hardcoding keys. In PowerShell, set an env var for the current session with:
-
-```powershell
-$env:API_BASE = "https://api.browser.cash"
-$env:API_KEY = "<your key>"
-```
+- Agent runs cannot be deleted or stopped once started at this time.
+- Session outputs may be deleted at any time after completion.
