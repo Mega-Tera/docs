@@ -72,7 +72,7 @@ console.log("sessionId:", data.sessionId);
       {`
       `}
     </style>
-    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+    {/* <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
       <button
         className="run-request-btn run-icon"
         data-url="https://api.browser.cash/v1/browser/session"
@@ -95,7 +95,7 @@ console.log("sessionId:", data.sessionId);
           style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto', marginBottom: '6px'}}
         ></div>
       </div>
-    </div>
+    </div> */}
 
   </Tab>
 
@@ -149,7 +149,7 @@ console.log(await res.json());
 
     </CodeGroup>
 
-    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+    {/* <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
       <button
         className="run-request-btn run-icon"
         data-url="https://api.browser.cash/v1/agent/task"
@@ -169,7 +169,7 @@ console.log(await res.json());
           className="run-output"
           style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto', marginBottom: '6px'}}
           ></div>
-    </div>
+    </div> */}
 
   </Tab>
 
@@ -210,7 +210,7 @@ console.log(await res.json());
 
     </CodeGroup>
 
-    <div style={{ marginTop: '10px', marginBottom: '12px' }}>
+    {/* <div style={{ marginTop: '10px', marginBottom: '12px' }}>
       <input
         id="session-id-input-get"
         className="run-input"
@@ -243,7 +243,7 @@ console.log(await res.json());
       </button>
       <span className="run-status"></span>
       <div className="run-output" style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto' }}></div>
-    </div>
+    </div> */}
 
   </Tab>
 
@@ -284,7 +284,7 @@ console.log("stopped", res.status);
 
     </CodeGroup>
 
-    <div style={{ marginTop: '10px', marginBottom: '12px' }}>
+    {/* <div style={{ marginTop: '10px', marginBottom: '12px' }}>
       <input
         id="session-id-input-stop"
         className="run-input"
@@ -317,7 +317,7 @@ console.log("stopped", res.status);
       </button>
       <span className="run-status"></span>
       <div className="run-output" style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto' }}></div>
-    </div>
+    </div> */}
 
   </Tab>
 
@@ -358,7 +358,7 @@ console.log(await res.json());
 
     </CodeGroup>
 
-    <div style={{ marginTop: '10px', marginBottom: '12px' }}>
+    {/* <div style={{ marginTop: '10px', marginBottom: '12px' }}>
       <input
         id="task-id-input"
         className="run-input"
@@ -373,8 +373,9 @@ console.log(await res.json());
           outline: 'none',
         }}
       />
-    </div>
-    <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
+    </div> */}
+    
+   {/* <div className="run-request" style={{ marginBottom: '30px', position: 'relative' }}>
       <button
         className="run-request-btn run-btn"
         data-url="https://api.browser.cash/v1/agent/task?taskId={taskId}"
@@ -391,7 +392,7 @@ console.log(await res.json());
       </button>
       <span className="run-status"></span>
       <div className="run-output" style={{ marginTop: '6px', maxHeight: '260px', overflow: 'auto' }}></div>
-    </div>
+    </div>*/}
 
   </Tab>
 </Tabs>
